@@ -252,13 +252,8 @@ function onCycleChange() {
 }
 
 function showToast(msg) {
-  const toast = document.getElementById('toast-msg');
-  if (!toast) return;
-  toast.innerText = msg;
-  toast.classList.add('show');
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 2500);
+  // Silent: no top alert banners displayed
+  return;
 }
 
 // Dashboard Data Updater
@@ -564,7 +559,6 @@ async function submitNewCycle() {
   const paid_on = document.getElementById('input-cycle-paid-on').value;
 
   if (!start_date || !daily_rate) {
-    alert("Please specify start date and daily rate");
     return;
   }
 
@@ -576,14 +570,12 @@ async function submitNewCycle() {
     });
     const data = await res.json();
     if (data.success) {
-      state.selectedCycleId = String(data.cycle_id); // Auto-select newly created cycle!
+      state.selectedCycleId = String(data.cycle_id);
       localStorage.setItem('dabba_selected_cycle', state.selectedCycleId);
       closeModal('modal-new-cycle');
       await initData();
-    } else {
-      alert("Error: " + data.error);
     }
   } catch (err) {
-    alert("Failed to create cycle");
+    console.error("Failed to create cycle:", err);
   }
 }
