@@ -1,49 +1,41 @@
-# Dabba. — Local Tiffin & Expense Tracker
+# 🍱 Dabba. — Tiffin & Expense Tracker (Project Specification v2.0)
 
 ## 1. Brand Identity & Design System
 - **Name:** Dabba.
-- **Aesthetic:** High-contrast, tactile minimalist (Linear / Teenage Engineering inspired).
-- **Colors:** Deep Basalt (`#0D0E11`), Matte Charcoal (`#16181D`), Emerald/Matcha (`#22C55E` / `#34D399`), Sage Range Highlight (`rgba(52, 211, 153, 0.12)`), Hatch/Dashed pattern for Vendor Off.
-- **Mobile UX:** One-Tap "Mark Today" Quick Banner, Haptic Feedback (`navigator.vibrate`), PWA / Add to Home Screen support.
+- **Aesthetic:** High-contrast, tactile minimalist (Geist / Inter typography, dark basalt `#0C1020` & light basalt `#F8FAFC`).
+- **Colors:**
+  - Emerald / Matcha (`#10B981` / `#34D399`) — Eaten Meal (Green Tile)
+  - Amber (`#F59E0B`) — Special Meal (Yellow Tile)
+  - Rose / Red (`#EF4444`) — Warning & Alerts
+  - Elevated Basalt (`#1B2238`) — Neutral Tile (Gray / Un-eaten)
+- **Footer:**
+  ```
+  © 2026 Dabba. All tiffins accounted for. Zero cold tiffins, zero math headaches.
+  Made by Taksheel Rawat
+  Food delivered by Kamlesh Negi
+  ```
 
 ---
 
-## 2. Advanced Real-World Logic Engine
+## 2. Advanced Real-World Logic Engine (v2.0)
 
 ### A. 3-State Meal Attendance System
-1. `Eaten` — Green circular badge (deducts 1 meal credit @ `rate_snapshot`).
-2. `Skipped by Me` — Neutral stone badge (user chose not to eat).
-3. `Vendor Off / No Service` — Hatch/dashed circle (Sunday / vendor holiday, excluded from personal skip stats).
+1. **Gray (`none` / Un-eaten):** Default state for non-logged calendar dates in a cycle.
+2. **Green (`eaten`):** Logged standard meal deducted at standard daily rate (`daily_rate` e.g. ₹90).
+3. **Yellow (`special`):** Logged meal with custom expense (e.g. ₹300 for special chicken plate). Deducts exact custom amount from cash balance while keeping eaten count (+1) and skipped count (-1) updated.
 
-### B. Dual Cycle Modes (Quota vs. Fixed Expiry)
-- **Meal Quota Mode (Flexible):** Unused credits carry forward indefinitely until consumed.
-- **Fixed Expiry Mode (Use-It-Or-Lose-It):** 30 calendar days limit; unconsumed meals marked as forfeited value at cycle end.
+### B. Top-Up Payment Engine
+- **Split Payments & Top-Ups:** `payments` table linked to `cycle_id`.
+- **Live Daily Rate Recalculation:** Adding top-up payments live-recalculates `daily_rate = Total Paid / 30`.
+- **Dynamic Ledger Sync:** Remaining balance (`Total Paid - Consumed Expense`) and covered days (`Math.floor(Remaining Balance / Daily Rate)`) update in real time.
 
-### C. Split Payments & Price Volatility
-- **One-to-Many Payments:** `payments` table linked to `cycle_id` allowing top-ups & split payments.
-- **Meal-Level Price Snapshotting:** Every meal record stores `rate_snapshot` protecting historical ledgers against price hikes.
-
-### D. Overdraft & Debt Management
-- Negative balance allowed (`-₹180` Debt state) with prominent visual alerts when payments are due.
+### C. Overview vs. Selected Cycle Calendar Locking
+- **All Cycles (Lifetime):** Calendar grid and month navigation lock with blurred backdrop (`opacity: 0.25`, `filter: blur(1.5px)`), disabling clicks and showing a red warning banner.
+- **Selected Cycle (`Cycle #N`):** Grid unfreezes for single-tap toggling within cycle start and end date boundaries.
 
 ---
 
-## 3. Telemetry, Analytics & Financial Metrics
-
-### A. Financial Leakage & Efficiency
-- **Effective Cost Per Meal:** `Total Amount Paid / Total Meals Consumed`.
-- **Money Wasted / Forfeited:** Value of expired unconsumed meals in fixed-expiry cycles.
-- **Daily Burn Rate:** Average daily expenditure rate.
-
-### B. Habit & Attendance Analytics
-- **Consistency Streak:** Current consecutive days of eating tiffin.
-- **Skip Rate Percentage:** `(Skipped Days / Total Delivery Days) * 100`.
-- **Day-of-Week Drop-off Pattern:** Breakdown of skip frequency by weekday (e.g. 70% Friday drop-off).
-- **Projected Depletion Date:** Estimated date current balance will run dry based on eating pace.
-
----
-
-## 4. Schema Specifications (`dabba.db`)
+## 3. Schema Specifications (`dabba.db`)
 
 ```sql
 CREATE TABLE cycles (
@@ -52,10 +44,10 @@ CREATE TABLE cycles (
     start_date TEXT NOT NULL,         -- YYYY-MM-DD
     end_date TEXT NOT NULL,           -- YYYY-MM-DD (start_date + 29 days)
     daily_rate REAL NOT NULL,
-    cycle_mode TEXT DEFAULT 'hybrid', -- 'quota' | 'fixed_expiry' | 'hybrid'
-    status TEXT DEFAULT 'active',     -- 'active' | 'concluded' | 'overdue'
+    cycle_mode TEXT DEFAULT 'hybrid', -- 'hybrid'
+    status TEXT DEFAULT 'active',     -- 'active' | 'concluded'
     notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE payments (
@@ -64,15 +56,21 @@ CREATE TABLE payments (
     amount REAL NOT NULL,
     paid_on TEXT NOT NULL,            -- YYYY-MM-DD
     note TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE meals (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    date TEXT UNIQUE NOT NULL,        -- YYYY-MM-DD (2026-01-01 to 2036-12-31)
-    status TEXT NOT NULL,             -- 'eaten' | 'skipped' | 'vendor_off'
+    date TEXT UNIQUE NOT NULL,        -- YYYY-MM-DD
+    status TEXT NOT NULL,             -- 'eaten' | 'special'
     rate_snapshot REAL NOT NULL,
     cycle_id INTEGER REFERENCES cycles(id) ON DELETE SET NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 ```
+
+---
+
+## 4. Security & Environment Compliance
+- **No Secret Files Pushed:** Zero `.env` files, API keys, or private tokens committed to GitHub.
+- **Git Ignore:** Configured to exclude `node_modules/`, `.gemini/`, `.env`, and log files.
