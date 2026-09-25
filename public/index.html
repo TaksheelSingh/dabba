@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dabba. — Tiffin & Expense Tracker</title>
+  <link rel="manifest" href="/manifest.json?v=21">
+  <meta name="theme-color" content="#0C1020">
+  <link rel="stylesheet" href="/style.css?v=21">
+</head>
+<body>
+  <div id="app-root">
+    
+    <!-- Left Sidebar Panel -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-row">
+          <div class="brand-title">Dabba.</div>
+          <button id="theme-toggle-desktop" class="theme-toggle-btn" title="Toggle Theme" onclick="toggleTheme()">
+            <span id="theme-icon-desktop">☀️</span>
+          </button>
+        </div>
+
+        <!-- Categorized Navigation Menu -->
+        <div class="nav-category">MAIN</div>
+        <nav class="nav-menu">
+          <a class="nav-item active">Dashboard</a>
+          <a class="nav-item" onclick="openModal('modal-new-cycle')">New Cycle</a>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-badge">
+          <div class="avatar-circle">TR</div>
+          <div>
+            <div style="font-size: 0.82rem; font-weight: 700;">Taksheel Rawat</div>
+            <div style="font-size: 0.68rem; color: var(--text-muted);">Local User</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile Top Header -->
+    <header class="mobile-header">
+      <div class="brand-title">Dabba.</div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button id="theme-toggle-mobile" class="theme-toggle-btn" onclick="toggleTheme()">
+          <span id="theme-icon-mobile">☀️</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Workspace -->
+    <main class="main-content">
+      
+      <!-- Unified Page Header Bar -->
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-subtitle">Real-time operational KPIs across tiffin credits, attendance, and cycle balances.</p>
+        </div>
+        
+        <!-- Clean Uniform Cycle Dropdown Filter -->
+        <div>
+          <select id="cycle-select" class="custom-select" onchange="onCycleChange()">
+            <option value="all">All Cycles (Lifetime)</option>
+          </select>
+        </div>
+      </header>
+
+      <!-- UNIFIED 3-COLUMN DASHBOARD GRID (Edge-to-Edge Fill) -->
+      <section class="dashboard-3col-grid">
+        
+        <!-- Column 1 (Huge / Left): Attendance Calendar -->
+        <div id="calendar-card" class="calendar-card">
+          <div class="calendar-nav">
+            <button class="btn-icon" onclick="changeMonth(-1)">&lt;</button>
+            <div id="month-year-label" class="month-label">September 2026</div>
+            <button class="btn-icon" onclick="changeMonth(1)">&gt;</button>
+          </div>
+
+          <div style="position: relative; flex: 1; display: flex; flex-direction: column;">
+            <div class="calendar-grid" id="calendar-grid">
+              <div class="weekday-header">Sun</div>
+              <div class="weekday-header">Mon</div>
+              <div class="weekday-header">Tue</div>
+              <div class="weekday-header">Wed</div>
+              <div class="weekday-header">Thu</div>
+              <div class="weekday-header">Fri</div>
+              <div class="weekday-header">Sat</div>
+            </div>
+
+            <!-- Centered Frozen Calendar Lock Overlay Badge -->
+            <div id="calendar-center-lock" class="calendar-center-lock">
+              <div class="center-lock-text">Please select a valid cycle from the dropdown to view or log daily meals</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2 (Smallest / Middle): 4 KPI Mini-Cards Stacked Vertically -->
+        <div class="kpi-vertical-column">
+          <div class="kpi-mini-card">
+            <div class="kpi-mini-label">Balance</div>
+            <div id="kpi-balance" class="kpi-mini-val" style="color: var(--accent-matcha);">₹0.00</div>
+            <div id="kpi-balance-sub" class="kpi-mini-sub">Remaining</div>
+          </div>
+
+          <div class="kpi-mini-card">
+            <div class="kpi-mini-label">Covered</div>
+            <div id="kpi-days-covered" class="kpi-mini-val">0</div>
+            <div class="kpi-mini-sub">Prepaid Meals</div>
+          </div>
+
+          <div class="kpi-mini-card">
+            <div class="kpi-mini-label">Eaten</div>
+            <div id="kpi-eaten-cnt" class="kpi-mini-val" style="color: var(--accent-emerald);">0</div>
+            <div class="kpi-mini-sub">Meals</div>
+          </div>
+
+          <div class="kpi-mini-card">
+            <div class="kpi-mini-label">Skipped</div>
+            <div id="kpi-skipped-cnt" class="kpi-mini-val" style="color: var(--text-muted);">0</div>
+            <div class="kpi-mini-sub">Meals</div>
+          </div>
+        </div>
+
+        <!-- Column 3 (Medium / Right): Active Cycle Summary Ledger -->
+        <div class="ledger-breakdown-card">
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Active Cycle Summary</div>
+            <h3 id="ledger-cycle-title" style="font-size: 1.1rem; font-weight: 800; margin-top: 4px;">Lifetime Overview (0)</h3>
+          </div>
+
+          <div style="margin-top: auto; margin-bottom: auto;">
+            <div class="ledger-item-row">
+              <span style="font-size: 0.8rem; color: var(--text-secondary);">Cycle Range</span>
+              <span id="ledger-range" style="font-size: 0.85rem; font-weight: 600;">-</span>
+            </div>
+            <div class="ledger-item-row">
+              <span style="font-size: 0.8rem; color: var(--text-secondary);">Daily Rate</span>
+              <span id="ledger-rate" style="font-size: 0.85rem; font-weight: 600;">-</span>
+            </div>
+            <div class="ledger-item-row">
+              <span style="font-size: 0.8rem; color: var(--text-secondary);">Total Paid</span>
+              <span id="ledger-paid" style="font-size: 0.85rem; font-weight: 700; color: var(--accent-matcha);">-</span>
+            </div>
+            <div class="ledger-item-row">
+              <span style="font-size: 0.8rem; color: var(--text-secondary);">Consumed Expense</span>
+              <span id="ledger-expense" style="font-size: 0.85rem; font-weight: 600;">-</span>
+            </div>
+          </div>
+
+          <div style="margin-top: 14px;">
+            <button id="btn-topup" class="btn-dashboard btn-dashboard-primary" style="width: 100%; height: 38px; font-size: 0.82rem;" onclick="openTopUpModal()">+ Top Up Payment</button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Workspace Page Footer -->
+      <footer class="dashboard-footer">
+        <div class="footer-line">© 2026 Dabba. All tiffins accounted for. Zero cold tiffins, zero math headaches.</div>
+        <div class="footer-subline">Made by Taksheel Rawat</div>
+        <div class="footer-subline">Food delivered by Kamlesh Negi</div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Toast Warning Message -->
+  <div id="toast-msg" class="toast-msg">Please select a valid cycle to log meals</div>
+
+  <!-- Modal: Create New Cycle -->
+  <div id="modal-new-cycle" class="modal-overlay">
+    <div id="modal-card-new-cycle" class="modal-card">
+      <h3 style="font-size: 1.15rem; font-weight: 800;">Start New 30-Day Cycle</h3>
+      
+      <div class="form-group">
+        <label class="form-label">Cycle Start Date</label>
+        <input type="date" id="input-cycle-start" class="form-input" onchange="onCycleStartChange()">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Cycle End Date (Auto 30 Days)</span>
+          <span id="end-date-spinner" class="input-spinner hidden">⚡ Calculating...</span>
+        </label>
+        <input type="date" id="input-cycle-end" class="form-input" readonly style="opacity: 0.85; cursor: not-allowed; background: var(--surface-elevated);">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Initial Total Payment (₹)</span>
+          <span id="paid-spinner" class="input-spinner hidden">⚡ Calculating...</span>
+        </label>
+        <input type="number" id="input-cycle-paid" class="form-input" value="2700" oninput="onCyclePaymentInput()">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Daily Meal Rate (₹/meal)</span>
+          <span id="rate-spinner" class="input-spinner hidden">⚡ Calculating...</span>
+        </label>
+        <input type="number" id="input-cycle-rate" class="form-input" value="90" oninput="onCycleRateInput()">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Payment Date</label>
+        <input type="date" id="input-cycle-paid-on" class="form-input">
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button class="btn-dashboard" style="flex: 1;" onclick="closeModal('modal-new-cycle')">Cancel</button>
+        <button class="btn-dashboard btn-dashboard-primary" style="flex: 1;" onclick="submitNewCycle()">Save Cycle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Top Up Payment -->
+  <div id="modal-topup-payment" class="modal-overlay">
+    <div class="modal-card">
+      <h3 style="font-size: 1.15rem; font-weight: 800;">Add Top-Up Payment</h3>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: -10px;">Increases cycle total paid and live-recalculates daily per meal rate.</p>
+      
+      <div class="form-group">
+        <label class="form-label">Top Up Amount (₹)</label>
+        <input type="number" id="input-topup-amount" class="form-input" placeholder="e.g. 300">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Payment Date</label>
+        <input type="date" id="input-topup-date" class="form-input">
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 8px;">
+        <button class="btn-dashboard" style="flex: 1;" onclick="closeModal('modal-topup-payment')">Cancel</button>
+        <button class="btn-dashboard btn-dashboard-primary" style="flex: 1;" onclick="submitTopUpPayment()">Save Top Up</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Edit / Unselect Meal (Green & Yellow Tiles) -->
+  <div id="modal-special-meal" class="modal-overlay">
+    <div class="modal-card">
+      <h3 id="special-meal-title" style="font-size: 1.15rem; font-weight: 800; color: var(--accent-amber);">Meal Options</h3>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: -10px;" id="special-meal-date-label">Choose an action for this meal date.</p>
+      
+      <div class="form-group">
+        <label class="form-label">Special Meal Custom Amount (₹)</label>
+        <input type="number" id="input-special-meal-amount" class="form-input" placeholder="e.g. 300 for chicken" value="300">
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
+        <button class="btn-dashboard btn-white-bar" onclick="submitSpecialMeal()">Special Meal</button>
+        <button class="btn-dashboard btn-white-bar" onclick="removeMealFromModal()">Unselect Meal</button>
+        <button class="btn-dashboard" style="margin-top: 4px;" onclick="closeModal('modal-special-meal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js?v=21"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => { for (let r of regs) r.update(); });
+      navigator.serviceWorker.register('/sw.js?v=21').catch(err => console.log('SW error:', err));
+    }
+  </script>
+</body>
+</html>

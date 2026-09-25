@@ -1,0 +1,17 @@
+{
+  "name": "dabba",
+  "version": "2.0.0",
+  "description": "Dabba — Tiffin & Expense Tracker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["tiffin", "tracker", "expense", "dabba"],
+  "author": "Taksheel Rawat",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1",
+    "sqlite3": "^6.0.1"
+  }
+}
