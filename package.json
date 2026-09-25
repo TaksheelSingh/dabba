@@ -4,9 +4,18 @@
   "description": "Dabba — Tiffin & Expense Tracker",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "npm install && npm rebuild sqlite3 --build-from-source"
   },
-  "keywords": ["tiffin", "tracker", "expense", "dabba"],
+  "engines": {
+    "node": "20.x"
+  },
+  "keywords": [
+    "tiffin",
+    "tracker",
+    "expense",
+    "dabba"
+  ],
   "author": "Taksheel Rawat",
   "license": "ISC",
   "type": "commonjs",
