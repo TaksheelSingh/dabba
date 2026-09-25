@@ -161,10 +161,14 @@ function triggerHaptic() {
   }
 }
 
+async function refreshAppState() {
+  await Promise.all([fetchCycles(), fetchMeals(), fetchTelemetry()]);
+  updateDashboardSymmetry();
+  renderCalendar();
+}
+
 async function initData() {
-  await fetchCycles();
-  await fetchMeals();
-  await fetchTelemetry();
+  await Promise.all([fetchCycles(), fetchMeals(), fetchTelemetry()]);
 
   // Restore saved cycle selection from localStorage across page refreshes
   const savedCycle = localStorage.getItem('dabba_selected_cycle');
@@ -437,11 +441,7 @@ async function postMealToggle(dateStr, status, customRate = null) {
     });
     const data = await res.json();
     if (data.success) {
-      await fetchCycles();
-      await fetchMeals();
-      await fetchTelemetry();
-      updateDashboardSymmetry();
-      renderCalendar();
+      await refreshAppState();
     }
   } catch (err) {
     console.error("Error toggling meal:", err);
@@ -536,11 +536,7 @@ async function submitTopUpPayment() {
     if (data.success) {
       closeModal('modal-topup-payment');
       showToast(`Added ₹${amount.toFixed(2)} Top-Up Payment!`);
-      await fetchCycles();
-      await fetchMeals();
-      await fetchTelemetry();
-      updateDashboardSymmetry();
-      renderCalendar();
+      await refreshAppState();
     } else {
       showToast("Error adding top-up: " + (data.error || 'Failed'));
     }

@@ -1,4 +1,4 @@
-# 🍱 Dabba. — Tiffin & Expense Tracker
+# 🍱 Dabba. — Tiffin & Expense Tracker v2.0
 
 > **Automated meal tracking, credit balance computation, and cycle ledger management. Built so you never pay for a meal you skipped.**
 
@@ -7,20 +7,34 @@ Hot Tiffins Delivered by **Kamlesh Negi**
 
 ---
 
-## 🌟 Key Features
+## 🏗️ Architecture & Engineering Highlights
 
-- **3-Column Uniform Dashboard:** Attendance Calendar, Real-Time KPI Cards, and Active Cycle Ledger breakdown with edge-to-edge alignment.
+- **Decoupled Business Logic:** Clean separation of concerns with Express routing in `server.js`, financial computations & cycle enrichment in `services/cycleService.js`, and database abstractions in `db.js`.
+- **DRY (Don't Repeat Yourself) Principles:** Zero code duplication. Unified parallel data fetching (`refreshAppState()`) and consolidated state management.
 - **3-State Attendance Toggling:**
-  - **Gray (Un-eaten / Skipped):** Default state for non-logged days.
-  - **Green (Eaten):** Logged standard meal at normal daily rate (e.g. ₹90/day).
-  - **Yellow (Special Meal):** Logged meal with custom expense (e.g. ₹300 for special chicken plate). Automatically deducts custom amount from cash balance while keeping meal count incremented and skipped count decremented accurately.
-- **Top-Up Payment Integration:** Instantly add top-up payments (+₹300) to live-recalculate daily rate (`Total Paid / 30`) and update remaining balance and covered days in real time.
-- **Frozen Overview Calendar:** In *All Cycles (Lifetime)* mode, calendar grid locks with a clean warning banner overlay instructing selection of a valid cycle.
-- **Persistent SQLite Ledger:** Powered by Express & SQLite database (`dabba.db`).
+  - **Gray (Un-eaten / Skipped):** Default state for non-logged calendar dates.
+  - **Green (Eaten):** Standard meal logged at the cycle's daily rate (e.g. ₹90/day).
+  - **Yellow (Special Meal):** Custom meal logged with special expense (e.g. ₹300 for chicken plate). Deducts exact custom amount from cash balance while correctly updating eaten (+1) and skipped (-1) meal counters.
+- **Top-Up Payment Integration:** Add extra payments (+₹300) anytime to live-recalculate daily rates (`Total Paid / 30`) and update remaining balances and covered days instantly.
+- **Frozen Overview Calendar:** In *All Cycles (Lifetime)* mode, calendar grid and month navigation lock cleanly with a warning overlay guiding cycle selection.
+- **Symmetric 3-Column Layout:** Pixel-perfect layout symmetry across Attendance Calendar, Real-Time KPI Cards, and Active Cycle Ledger Summary.
 
 ---
 
-## 🚀 Quick Start (Local Setup)
+## 🛠️ API Specification
+
+| Endpoint | Method | Description |
+| :--- | :--- | :--- |
+| `/api/cycles` | `GET` | Fetches all cycles enriched with total paid, consumed expense, remaining balance, and covered days. |
+| `/api/cycles` | `POST` | Creates a new 30-day cycle with auto-incremented cycle number and optional initial payment. |
+| `/api/payments` | `POST` | Adds a top-up payment to a cycle, live-recalculating total paid and per-meal daily rate. |
+| `/api/meals` | `GET` | Retrieves meal attendance records. |
+| `/api/meals/toggle` | `POST` | Toggles meal status (`eaten`, `special`, or `none`) with custom rate snapshot support. |
+| `/api/telemetry` | `GET` | Returns lifetime telemetry metrics (total paid, total expense, effective cost per meal). |
+
+---
+
+## 💻 Local Setup & Development
 
 ```bash
 # 1. Clone the repository
@@ -30,8 +44,20 @@ cd dabba
 # 2. Install dependencies
 npm install
 
-# 3. Start local server
+# 3. Start local development server
 npm start
 ```
 
-Open `http://localhost:3000` in your browser!
+Access the dashboard locally at `http://localhost:3000`.
+
+---
+
+## 🚀 Live Public Deployment
+
+- **GitHub Repository:** [https://github.com/TaksheelSingh/dabba](https://github.com/TaksheelSingh/dabba)
+- **Live Public URL:** [https://dabba-tiffin.loca.lt](https://dabba-tiffin.loca.lt)
+
+---
+
+## 📄 License
+ISC © 2026 **Taksheel Rawat**

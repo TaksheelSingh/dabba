@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const os = require('os');
 const { dbQuery, dbGet, dbRun } = require('./db');
+const { addDays, enrichCycle, syncCyclePaymentStats } = require('./services/cycleService');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,55 +22,13 @@ function getLocalIPAddress() {
   return 'localhost';
 }
 
-function addDays(dateStr, days) {
-  const d = new Date(dateStr + 'T00:00:00Z');
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().split('T')[0];
-}
-
 // -------------------------------------------------------------
 // CYCLES API
 // -------------------------------------------------------------
 app.get('/api/cycles', async (req, res) => {
   try {
     const cycles = await dbQuery(`SELECT * FROM cycles ORDER BY start_date DESC`);
-    
-    const enriched = await Promise.all(cycles.map(async (c) => {
-      const payments = await dbQuery(`SELECT * FROM payments WHERE cycle_id = ? ORDER BY paid_on ASC`, [c.id]);
-      const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
-
-      // Recalculate daily_rate as totalPaid / 30 if payments exist
-      const recalculatedRate = totalPaid > 0 ? Math.round((totalPaid / 30) * 100) / 100 : c.daily_rate;
-      if (recalculatedRate !== c.daily_rate && totalPaid > 0) {
-        await dbRun(`UPDATE cycles SET daily_rate = ? WHERE id = ?`, [recalculatedRate, c.id]);
-        c.daily_rate = recalculatedRate;
-      }
-
-      const meals = await dbQuery(
-        `SELECT * FROM meals WHERE (cycle_id = ?) OR (date >= ? AND date <= ? AND cycle_id IS NULL)`,
-        [c.id, c.start_date, c.end_date]
-      );
-
-      // Both normal 'eaten' and custom 'special' count as eaten meals
-      const eatenMeals = meals.filter(m => m.status === 'eaten' || m.status === 'special');
-      const skippedCount = Math.max(0, 30 - eatenMeals.length);
-
-      const totalExpense = eatenMeals.reduce((sum, m) => sum + (m.rate_snapshot !== undefined ? m.rate_snapshot : c.daily_rate), 0);
-      const remainingBalance = totalPaid - totalExpense;
-      const daysCovered = c.daily_rate > 0 ? Math.floor(remainingBalance / c.daily_rate) : 0;
-
-      return {
-        ...c,
-        payments,
-        total_paid: totalPaid,
-        eaten_count: eatenMeals.length,
-        skipped_count: skippedCount,
-        total_expense: totalExpense,
-        remaining_balance: remainingBalance,
-        days_covered: daysCovered > 0 ? daysCovered : 0
-      };
-    }));
-
+    const enriched = await Promise.all(cycles.map(enrichCycle));
     res.json({ success: true, cycles: enriched });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -85,7 +44,6 @@ app.post('/api/cycles', async (req, res) => {
     }
 
     const end_date = addDays(start_date, 29);
-
     const countRow = await dbGet(`SELECT COUNT(*) as cnt FROM cycles`);
     const cycle_number = (countRow ? countRow.cnt : 0) + 1;
 
@@ -111,7 +69,7 @@ app.post('/api/cycles', async (req, res) => {
 });
 
 // -------------------------------------------------------------
-// PAYMENTS API
+// PAYMENTS API (Top-Up Payments)
 // -------------------------------------------------------------
 app.post('/api/payments', async (req, res) => {
   try {
@@ -125,12 +83,7 @@ app.post('/api/payments', async (req, res) => {
       [cycle_id, parseFloat(amount), paid_on, note || 'Top Up Payment']
     );
 
-    // Live recalculate cycle total paid and daily rate
-    const payments = await dbQuery(`SELECT amount FROM payments WHERE cycle_id = ?`, [cycle_id]);
-    const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
-    const newDailyRate = Math.round((totalPaid / 30) * 100) / 100;
-
-    await dbRun(`UPDATE cycles SET daily_rate = ? WHERE id = ?`, [newDailyRate, cycle_id]);
+    const { totalPaid, newDailyRate } = await syncCyclePaymentStats(cycle_id);
 
     res.json({ success: true, payment_id: result.id, total_paid: totalPaid, daily_rate: newDailyRate });
   } catch (err) {
