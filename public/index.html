@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dabba. — Tiffin & Expense Tracker</title>
-  <link rel="manifest" href="/manifest.json?v=21">
+  <link rel="manifest" href="/manifest.json?v=22">
   <meta name="theme-color" content="#0C1020">
-  <link rel="stylesheet" href="/style.css?v=21">
+  <link rel="stylesheet" href="/style.css?v=22">
 </head>
 <body>
   <div id="app-root">
@@ -44,6 +44,7 @@
     <header class="mobile-header">
       <div class="brand-title">Dabba.</div>
       <div style="display: flex; align-items: center; gap: 8px;">
+        <button class="btn-dashboard btn-dashboard-primary" style="height: 34px; padding: 0 12px; font-size: 0.78rem;" onclick="openModal('modal-new-cycle')">+ New Cycle</button>
         <button id="theme-toggle-mobile" class="theme-toggle-btn" onclick="toggleTheme()">
           <span id="theme-icon-mobile">☀️</span>
         </button>
@@ -258,11 +259,11 @@
     </div>
   </div>
 
-  <script src="/app.js?v=21"></script>
+  <script src="/app.js?v=22"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(regs => { for (let r of regs) r.update(); });
-      navigator.serviceWorker.register('/sw.js?v=21').catch(err => console.log('SW error:', err));
+      navigator.serviceWorker.register('/sw.js?v=22').catch(err => console.log('SW error:', err));
     }
   </script>
 </body>
