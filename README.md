@@ -17,7 +17,9 @@ Hot Tiffins Delivered by **Kamlesh Negi**
   - **Yellow (Special Meal):** Custom meal logged with special expense (e.g. ₹300 for chicken plate). Deducts exact custom amount from cash balance while correctly updating eaten (+1) and skipped (-1) meal counters.
 - **Top-Up Payment Integration:** Add extra payments (+₹300) anytime to live-recalculate daily rates (`Total Paid / 30`) and update remaining balances and covered days instantly.
 - **Frozen Overview Calendar:** In *All Cycles (Lifetime)* mode, calendar grid and month navigation lock cleanly with a warning overlay guiding cycle selection.
-- **Symmetric 3-Column Layout:** Pixel-perfect layout symmetry across Attendance Calendar, Real-Time KPI Cards, and Active Cycle Ledger Summary.
+- **Mobile Responsive & Equidistant Card Layout:** Single-column vertical stacking on mobile screens ($\le 768\text{px}$) with 14px vertical spacing, custom modal overlays, and pixel-perfect 3-column desktop grid.
+- **Zero-Flicker Theme Toggle:** Hardware-accelerated dark/light theme switching optimized for mobile GPUs.
+- **Silent Notification System:** Replaced noisy native browser alerts with smooth, inline visual feedback.
 
 ---
 
@@ -55,7 +57,7 @@ Access the dashboard locally at `http://localhost:3000`.
 ## 🚀 Live Public Deployment
 
 - **GitHub Repository:** [https://github.com/TaksheelSingh/dabba](https://github.com/TaksheelSingh/dabba)
-- **Live Public URL:** [https://dabba-tiffin.loca.lt](https://dabba-tiffin.loca.lt)
+- **Live Render URL (24/7):** [https://dabba-yvl1.onrender.com](https://dabba-yvl1.onrender.com)
 
 ---
 

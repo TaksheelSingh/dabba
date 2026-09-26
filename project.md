@@ -33,6 +33,15 @@
 - **All Cycles (Lifetime):** Calendar grid and month navigation lock with blurred backdrop (`opacity: 0.25`, `filter: blur(1.5px)`), disabling clicks and showing a red warning banner.
 - **Selected Cycle (`Cycle #N`):** Grid unfreezes for single-tap toggling within cycle start and end date boundaries.
 
+### D. Mobile Responsiveness & Equidistant Card Layout
+- **Vertical Single-Column Stacking:** On mobile screens ($\le 768\text{px}$), the 3-column desktop grid dynamically transforms into a single full-width column (`flex-direction: column !important; width: 100% !important;`).
+- **Equidistant Mobile Spacing:** All dashboard cards maintain a uniform 14px vertical gap across calendar, KPI metrics, and payment ledger sections.
+- **Mobile Navigation Header:** Top bar includes a dedicated `+ New Cycle` white button for quick mobile cycle creation.
+
+### E. Silent Notifications & Zero-Flicker UX
+- **Native Alert Removal:** Replaced legacy `alert(...)` popups with silent visual UI updates.
+- **Zero-Flicker Mobile Theme Switching:** Optimized CSS selectors by stripping universal wildcard `*` transitions, ensuring smooth, instantaneous light/dark theme toggles on mobile GPUs.
+
 ---
 
 ## 3. Schema Specifications (`dabba.db`)
