@@ -27,21 +27,7 @@ function getLocalIPAddress() {
 // -------------------------------------------------------------
 app.get('/api/cycles', async (req, res) => {
   try {
-    let cycles = await dbQuery(`SELECT * FROM cycles ORDER BY start_date DESC`);
-    
-    // Auto-ensure Cycle #1 exists if database is clean/empty
-    if (cycles.length === 0) {
-      const resCycle = await dbRun(
-        `INSERT INTO cycles (cycle_number, start_date, end_date, daily_rate, cycle_mode, status, notes)
-         VALUES (1, '2026-09-01', '2026-09-30', 90.00, 'hybrid', 'active', 'Initial September Cycle')`
-      );
-      await dbRun(
-        `INSERT INTO payments (cycle_id, amount, paid_on, note) VALUES (?, 2700.00, '2026-09-01', 'Initial Cycle Payment')`,
-        [resCycle.id]
-      );
-      cycles = await dbQuery(`SELECT * FROM cycles ORDER BY start_date DESC`);
-    }
-
+    const cycles = await dbQuery(`SELECT * FROM cycles ORDER BY start_date DESC`);
     const enriched = await Promise.all(cycles.map(enrichCycle));
     res.json({ success: true, cycles: enriched });
   } catch (err) {
