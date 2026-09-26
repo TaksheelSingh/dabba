@@ -12,6 +12,12 @@ Thumbs.db
 # Gemini Antigravity CLI artifacts
 .gemini/
 
+# Database files
+dabba.db
+dabba.db-journal
+dabba.db-wal
+dabba.db-shm
+
 # Logs & Temporary files
 *.log
 npm-debug.log*
