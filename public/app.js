@@ -174,6 +174,9 @@ async function initData() {
   const savedCycle = localStorage.getItem('dabba_selected_cycle');
   if (savedCycle && (savedCycle === 'all' || state.cycles.some(c => String(c.id) === String(savedCycle)))) {
     state.selectedCycleId = savedCycle;
+  } else if (state.cycles.length > 0) {
+    state.selectedCycleId = String(state.cycles[0].id);
+    localStorage.setItem('dabba_selected_cycle', state.selectedCycleId);
   } else {
     state.selectedCycleId = 'all';
   }

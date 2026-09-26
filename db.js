@@ -56,6 +56,26 @@ db.serialize(() => {
 
   // Clean up any legacy 'skipped' or 'none' records from meals table
   db.run(`DELETE FROM meals WHERE status = 'skipped' OR status = 'none'`);
+
+  // Auto-seed Cycle #1 if database is brand new or empty, leaving meals 100% clean
+  db.get(`SELECT COUNT(*) as count FROM cycles`, (err, row) => {
+    if (!err && row && row.count === 0) {
+      db.run(
+        `INSERT INTO cycles (cycle_number, start_date, end_date, daily_rate, cycle_mode, status, notes)
+         VALUES (1, '2026-09-01', '2026-09-30', 90.00, 'hybrid', 'active', 'Initial September Cycle')`,
+        function (err2) {
+          if (!err2) {
+            const cycleId = this.lastID;
+            db.run(
+              `INSERT INTO payments (cycle_id, amount, paid_on, note)
+               VALUES (?, 2700.00, '2026-09-01', 'Initial Cycle Payment')`,
+              [cycleId]
+            );
+          }
+        }
+      );
+    }
+  });
 });
 
 // Helper utilities wrapped in Promises for clean async/await
