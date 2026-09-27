@@ -1,20 +1,16 @@
-const sqlite3 = require('sqlite3').verbose();
+const { createClient } = require('@libsql/client');
 const path = require('path');
-const fs = require('fs');
 
-const dbPath = process.env.DB_PATH || path.join(__dirname, 'dabba.db');
+const url = process.env.TURSO_DATABASE_URL || `file:${path.join(__dirname, 'dabba.db')}`;
+const authToken = process.env.TURSO_AUTH_TOKEN;
 
-// Ensure parent directory exists for persistent disk mounts
-const dbDir = path.dirname(dbPath);
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-}
+const client = createClient({
+  url,
+  authToken
+});
 
-const db = new sqlite3.Database(dbPath);
-
-db.serialize(() => {
-  // Cycles Table
-  db.run(`
+async function initDB() {
+  await client.execute(`
     CREATE TABLE IF NOT EXISTS cycles (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       cycle_number INTEGER NOT NULL,
@@ -28,8 +24,7 @@ db.serialize(() => {
     )
   `);
 
-  // Payments Table (Split payments per cycle)
-  db.run(`
+  await client.execute(`
     CREATE TABLE IF NOT EXISTS payments (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       cycle_id INTEGER NOT NULL,
@@ -41,8 +36,7 @@ db.serialize(() => {
     )
   `);
 
-  // Meals Table (3-state attendance with rate snapshotting)
-  db.run(`
+  await client.execute(`
     CREATE TABLE IF NOT EXISTS meals (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       date TEXT UNIQUE NOT NULL,
@@ -54,36 +48,25 @@ db.serialize(() => {
     )
   `);
 
-  // Clean up any legacy 'skipped' or 'none' records from meals table
-  db.run(`DELETE FROM meals WHERE status = 'skipped' OR status = 'none'`);
-});
+  await client.execute(`DELETE FROM meals WHERE status = 'skipped' OR status = 'none'`);
+}
 
-// Helper utilities wrapped in Promises for clean async/await
-const dbQuery = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.all(sql, params, (err, rows) => {
-      if (err) reject(err);
-      else resolve(rows);
-    });
-  });
+initDB().catch(err => console.error("Error initializing DB schema:", err));
+
+const dbQuery = async (sql, params = []) => {
+  const result = await client.execute({ sql, args: params });
+  return result.rows.map(row => ({ ...row }));
 };
 
-const dbGet = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.get(sql, params, (err, row) => {
-      if (err) reject(err);
-      else resolve(row);
-    });
-  });
+const dbGet = async (sql, params = []) => {
+  const result = await client.execute({ sql, args: params });
+  return result.rows.length > 0 ? { ...result.rows[0] } : null;
 };
 
-const dbRun = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.run(sql, params, function (err) {
-      if (err) reject(err);
-      else resolve({ id: this.lastID, changes: this.changes });
-    });
-  });
+const dbRun = async (sql, params = []) => {
+  const result = await client.execute({ sql, args: params });
+  const id = result.lastInsertRowid !== undefined ? Number(result.lastInsertRowid) : null;
+  return { id, changes: result.rowsAffected };
 };
 
-module.exports = { db, dbQuery, dbGet, dbRun };
+module.exports = { client, dbQuery, dbGet, dbRun };

@@ -4,9 +4,7 @@
   "description": "Dabba — Tiffin & Expense Tracker",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "postinstall": "npm rebuild sqlite3 --build-from-source",
-    "build": "npm install && npm rebuild sqlite3 --build-from-source"
+    "start": "node server.js"
   },
   "engines": {
     "node": "20.x"
@@ -21,6 +19,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@libsql/client": "^0.18.0",
     "express": "^5.2.1",
     "sqlite3": "^6.0.1"
   }
