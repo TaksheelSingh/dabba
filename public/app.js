@@ -261,9 +261,16 @@ function onCycleChange() {
   renderCalendar();
 }
 
+let toastTimer = null;
 function showToast(msg) {
-  // Silent: no top alert banners displayed
-  return;
+  const toast = document.getElementById('toast-msg');
+  if (!toast) return;
+  toast.innerText = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3200);
 }
 
 // Dashboard Data Updater
@@ -574,10 +581,28 @@ async function removeMealFromModal() {
 
 // Top-Up Payment Handlers
 function openTopUpModal() {
-  if (state.selectedCycleId === 'all') {
-    showToast("Please select a valid cycle from the dropdown to add top up payment");
+  triggerHaptic();
+  if (!state.cycles || state.cycles.length === 0) {
+    showToast("No active cycles found. Please create a cycle first.");
+    openModal('modal-new-cycle');
     return;
   }
+
+  const cycleSelect = document.getElementById('input-topup-cycle');
+  if (cycleSelect) {
+    let options = '';
+    state.cycles.forEach(c => {
+      options += `<option value="${c.id}">Cycle #${c.cycle_number} (${formatDisplayDate(c.start_date)} to ${formatDisplayDate(c.end_date)})</option>`;
+    });
+    cycleSelect.innerHTML = options;
+    
+    if (state.selectedCycleId !== 'all' && state.cycles.some(c => String(c.id) === String(state.selectedCycleId))) {
+      cycleSelect.value = state.selectedCycleId;
+    } else {
+      cycleSelect.value = String(state.cycles[0].id);
+    }
+  }
+
   const amountInput = document.getElementById('input-topup-amount');
   const dateInput = document.getElementById('input-topup-date');
   
@@ -588,8 +613,11 @@ function openTopUpModal() {
 }
 
 async function submitTopUpPayment() {
-  if (state.selectedCycleId === 'all') {
-    showToast("Please select a valid cycle from the dropdown");
+  const cycleSelect = document.getElementById('input-topup-cycle');
+  const targetCycleId = cycleSelect ? cycleSelect.value : (state.selectedCycleId !== 'all' ? state.selectedCycleId : '');
+
+  if (!targetCycleId) {
+    showToast("Please select a target cycle for the top-up payment");
     return;
   }
 
@@ -606,7 +634,7 @@ async function submitTopUpPayment() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        cycle_id: state.selectedCycleId,
+        cycle_id: targetCycleId,
         amount,
         paid_on,
         note: 'Top Up Payment'
