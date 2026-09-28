@@ -44,10 +44,10 @@
 - **All Cycles:** Calendar grid and month navigation lock with blurred backdrop (`opacity: 0.25`, `filter: blur(1.5px)`), disabling clicks and showing a warning banner.
 - **Selected Cycle (`Cycle #N`):** Grid unfreezes for single-tap toggling within cycle start and end date boundaries.
 
-### F. Zero-Flicker Theme Switcher & Strict Grid Bounds
+### F. Zero-Flicker Theme Switcher & Responsive Calendar Scaling
 - **Zero-Flicker Theme Engine:** Uses a `.theme-transitioning` CSS suppressor class during dark/light mode toggles, forcing instant synchronous background and border updates across all elements without multi-frame color lag or flickering.
+- **Mobile Calendar Responsive Scaling:** Configured `.calendar-grid` to use `repeat(7, minmax(0, 1fr))` and removed fixed `min-height` constraints on `.day-tile`. All 7 weekday columns (`SUN` through `SAT`) smoothly scale down to fit small phone viewports with zero horizontal overflow or cut-off.
 - **Strict Grid & Container Bounds:** Replaced `100vw` with `100%` width constraints and applied `min-width: 0` across grid children and KPI cards, preventing card overflow or scrollbar bounds issues across desktop and mobile screens.
-- **Responsive Stacking:** On mobile screens ($\le 768\text{px}$), the 3-column desktop grid dynamically transforms into a single full-width column with truncated card labels and compact padding.
 
 ---
 
