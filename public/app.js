@@ -57,12 +57,25 @@ function toggleTheme() {
 }
 
 function applyTheme(theme) {
+  document.documentElement.classList.add('theme-transitioning');
   document.documentElement.setAttribute('data-theme', theme);
+
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute('content', theme === 'dark' ? '#0B0E14' : '#F3F4F7');
+  }
+
   const icon = theme === 'dark' ? '☀️' : '🌙';
   const iconDesktop = document.getElementById('theme-icon-desktop');
   const iconMobile = document.getElementById('theme-icon-mobile');
   if (iconDesktop) iconDesktop.innerText = icon;
   if (iconMobile) iconMobile.innerText = icon;
+
+  void document.documentElement.offsetHeight;
+
+  setTimeout(() => {
+    document.documentElement.classList.remove('theme-transitioning');
+  }, 60);
 }
 
 function getTodayISOString() {

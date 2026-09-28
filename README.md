@@ -11,7 +11,8 @@ Hot Tiffins Delivered by **Kamlesh Negi**
 
 - **Decoupled Business Logic:** Clean separation of concerns with Express routing in `server.js`, financial computations & cycle enrichment in `services/cycleService.js`, and database abstractions in `db.js`.
 - **Multi-View Workspace Architecture:** Instant switching between **Dashboard** and **Payments Ledger** workspace views with 4 top KPI summary cards (`Total Logs`, `Initial Payments`, `Total Top-Ups`, `Money Loaded`) and a 6-column transaction ledger (`S.No`, `Cycle`, `Payment Date`, `Initial Payment`, `Add-Ons / Top-Ups`, `Total Paid`).
-- **Bespoke Architectural Color System:** High-end **Obsidian Velvet** (`#0B0E14`) Dark Mode and warm **Studio Porcelain** (`#F3F4F7`) Light Mode. Red Non-Veg meal badges styled in warm Crimson Rose (`#F43F5E` / `#E11D48`).
+- **Zero-Flicker Architectural Color System:** High-end **Obsidian Velvet** (`#0B0E14`) Dark Mode and warm **Studio Porcelain** (`#F3F4F7`) Light Mode with instant zero-flicker theme switching via `.theme-transitioning` CSS class. Red Non-Veg meal badges styled in warm Crimson Rose (`#F43F5E` / `#E11D48`).
+- **Strict Container & Grid Bounds:** Eliminates card overflow and horizontal scrollbar glitches by replacing `100vw` with `100%` viewport constraints and setting `min-width: 0` across CSS grid containers.
 - **3-State Attendance Toggling:**
   - **Gray (Un-eaten / Skipped):** Default state for non-logged calendar dates.
   - **Green (Eaten):** Standard meal logged at the cycle's daily rate (e.g. ₹90/day).
