@@ -28,12 +28,13 @@
 
 ### B. Verified Top-Up Payment Engine
 - **Split Payments & Top-Ups:** `payments` table linked to `cycle_id`.
-- **Live Daily Rate Recalculation:** Adding top-up payments (via `Top Up Payment` modal) live-recalculates `daily_rate = Total Paid / 30`.
-- **Dynamic Ledger Sync:** Remaining balance (`Total Paid - Consumed Expense`) and covered days (`Math.floor(Remaining Balance / Daily Rate)`) update in real time across Dashboard and Payments Workspace views.
+- **Automatic Active Cycle Selection:** Opening the `Top Up Payment` modal automatically selects and binds the current active cycle context.
+- **Live Daily Rate Recalculation:** Adding top-up payments live-recalculates `daily_rate = Total Paid / 30`.
+- **Dynamic Ledger Sync:** Remaining balance (`Total Paid - Consumed Expense`) and covered days update in real time across Dashboard and Payments Workspace views.
 
 ### C. Workspace View Switching & Navigation
 - **Multi-View Architecture:** Instant switching between `Dashboard` view and `Payments Ledger` workspace view.
-- **Payments Workspace View:** Displays transaction history cards and a scrollable table with `S.No`, `Cycle Number`, `Payment Date`, `Initial Payment`, `Add-Ons / Top-Ups`, `Total Paid`, and notes.
+- **Payments Workspace View:** Features 4 KPI cards (`Total Logs`, `Initial Payments`, `Total Top-Ups`, `Money Loaded`) and a full-width scrollable ledger table with 6 clean columns (`S.No`, `Cycle`, `Payment Date`, `Initial Payment`, `Add-Ons / Top-Ups`, `Total Paid`).
 
 ### D. Single-Cycle Deletion & Reset System
 - **Compact Profile & Reset "R" Button:** Sidebar footer features a crammed profile badge (`Taksheel Rawat`) and an optically centered red circular **R** reset action button.

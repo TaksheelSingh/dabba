@@ -10,13 +10,13 @@ Hot Tiffins Delivered by **Kamlesh Negi**
 ## 🏗️ Architecture & Engineering Highlights
 
 - **Decoupled Business Logic:** Clean separation of concerns with Express routing in `server.js`, financial computations & cycle enrichment in `services/cycleService.js`, and database abstractions in `db.js`.
-- **Multi-View Workspace Architecture:** Instant switching between **Dashboard** and **Payments Ledger** workspace views without disruptive modal popups.
+- **Multi-View Workspace Architecture:** Instant switching between **Dashboard** and **Payments Ledger** workspace views with 4 top KPI summary cards (`Total Logs`, `Initial Payments`, `Total Top-Ups`, `Money Loaded`) and a 6-column transaction ledger (`S.No`, `Cycle`, `Payment Date`, `Initial Payment`, `Add-Ons / Top-Ups`, `Total Paid`).
 - **Bespoke Architectural Color System:** High-end **Obsidian Velvet** (`#0B0E14`) Dark Mode and warm **Studio Porcelain** (`#F3F4F7`) Light Mode. Red Non-Veg meal badges styled in warm Crimson Rose (`#F43F5E` / `#E11D48`).
 - **3-State Attendance Toggling:**
   - **Gray (Un-eaten / Skipped):** Default state for non-logged calendar dates.
   - **Green (Eaten):** Standard meal logged at the cycle's daily rate (e.g. ₹90/day).
   - **Red / Crimson (Non-Veg Meal):** Custom meal logged with special expense (e.g. ₹300 for chicken plate). Deducts exact custom amount from cash balance while updating eaten (+1) and skipped (-1) meal counters.
-- **Verified Top-Up Payment Engine:** Add extra payments anytime to live-recalculate daily rates (`Total Paid / 30`) and update remaining balances, covered days, and transaction history in real time.
+- **Verified Top-Up Payment Engine:** Automatically selects and binds the active cycle context on modal open. Recalculates daily rates (`Total Paid / 30`) and updates remaining balances, covered days, and transaction history in real time.
 - **Single-Cycle Deletion & Reset System:** Compact user profile badge with an optically centered circular red **R** action button. Triggers cycle deletion (`DELETE /api/cycles/:id`) or complete cloud database wipes.
 - **Equal-Height 8 KPI Grid Alignment:** 2x4 KPI mini-card grid spanning the exact vertical height of neighboring desktop cards, flush with bottom alignment and stadium rounded shapes (`border-radius: 9999px`).
 - **Frozen Overview Calendar:** In *All Cycles* overview mode, calendar grid and month navigation lock cleanly with a centered overlay guiding cycle selection.

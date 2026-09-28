@@ -780,7 +780,6 @@ function renderPaymentsView() {
         <td style="font-weight: 700; color: var(--accent-matcha);">₹${initialPaid.toFixed(2)}</td>
         <td>${topUpPaid > 0 ? `<span style="color: var(--accent-emerald); font-weight: 700;">+₹${topUpPaid.toFixed(2)}</span>` : '₹0.00'}</td>
         <td style="font-weight: 800; color: var(--accent-matcha);">₹${totalPaid.toFixed(2)}</td>
-        <td><span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Active Cycle</span></td>
       </tr>
     `;
   });
@@ -788,7 +787,7 @@ function renderPaymentsView() {
   if (state.cycles.length === 0) {
     rowsHtml = `
       <tr>
-        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px 0; font-weight: 600;">
+        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px 0; font-weight: 600;">
           No payment records found. Start a new cycle to record initial payments.
         </td>
       </tr>
