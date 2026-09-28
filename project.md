@@ -44,10 +44,10 @@
 - **All Cycles:** Calendar grid and month navigation lock with blurred backdrop (`opacity: 0.25`, `filter: blur(1.5px)`), disabling clicks and showing a warning banner.
 - **Selected Cycle (`Cycle #N`):** Grid unfreezes for single-tap toggling within cycle start and end date boundaries.
 
-### F. Zero-Flicker Theme Switcher & Responsive Calendar Scaling
+### F. Zero-Flicker Theme Switcher & Dual Desktop/Mobile Proportions
 - **Zero-Flicker Theme Engine:** Uses a `.theme-transitioning` CSS suppressor class during dark/light mode toggles, forcing instant synchronous background and border updates across all elements without multi-frame color lag or flickering.
-- **Mobile Calendar Responsive Scaling:** Configured `.calendar-grid` to use `repeat(7, minmax(0, 1fr))` and removed fixed `min-height` constraints on `.day-tile`. All 7 weekday columns (`SUN` through `SAT`) smoothly scale down to fit small phone viewports with zero horizontal overflow or cut-off.
-- **Strict Grid & Container Bounds:** Replaced `100vw` with `100%` width constraints and applied `min-width: 0` across grid children and KPI cards, preventing card overflow or scrollbar bounds issues across desktop and mobile screens.
+- **Desktop Web Proportions:** Preserves full 440px height calendar cards with 320px grid height and bottom-anchored legend bars (`margin-top: auto`), ensuring Column 1 (Calendar), Column 2 (6 KPI Cards), and Column 3 (Active Cycle Summary) remain 100% flush and symmetrical at the bottom.
+- **Mobile Calendar Responsive Scaling:** `@media (max-width: 768px)` uses `repeat(7, minmax(0, 1fr))` grid tracks and auto-scaling aspect-ratio day tiles (`max-width: 40px`), ensuring all 7 weekday columns (`SUN` through `SAT`) fit phone viewports cleanly with zero horizontal overflow.
 
 ---
 
