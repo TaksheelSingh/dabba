@@ -166,6 +166,7 @@ async function refreshAppState() {
   await Promise.all([fetchCycles(), fetchMeals(), fetchTelemetry()]);
   updateDashboardSymmetry();
   renderCalendar();
+  renderPaymentsView();
 }
 
 async function initData() {
@@ -187,6 +188,7 @@ async function initData() {
 
   updateDashboardSymmetry();
   renderCalendar();
+  renderPaymentsView();
 }
 
 // API Fetchers with clean state reset
@@ -685,10 +687,147 @@ async function hardResetDatabase() {
     if (data.success) {
       state.selectedCycleId = 'all';
       localStorage.removeItem('dabba_selected_cycle');
+      closeModal('modal-reset-options');
       await refreshAppState();
       showToast("Database completely cleared!");
     }
   } catch (err) {
     console.error("Failed to reset database:", err);
+  }
+}
+
+// -------------------------------------------------------------
+// WORKSPACE VIEW SWITCHER (Dashboard vs Payments Page)
+// -------------------------------------------------------------
+function switchView(viewName) {
+  triggerHaptic();
+  const navDash = document.getElementById('nav-dashboard');
+  const navPay = document.getElementById('nav-payments');
+  const viewDash = document.getElementById('view-dashboard');
+  const viewPay = document.getElementById('view-payments');
+
+  if (viewName === 'payments') {
+    if (navDash) navDash.classList.remove('active');
+    if (navPay) navPay.classList.add('active');
+    if (viewDash) viewDash.classList.add('hidden');
+    if (viewPay) viewPay.classList.remove('hidden');
+    renderPaymentsView();
+  } else {
+    if (navPay) navPay.classList.remove('active');
+    if (navDash) navDash.classList.add('active');
+    if (viewPay) viewPay.classList.add('hidden');
+    if (viewDash) viewDash.classList.remove('hidden');
+  }
+}
+
+// Render Payments Workspace View
+function renderPaymentsView() {
+  const tableBody = document.getElementById('full-payments-table-body');
+  const payCount = document.getElementById('pay-kpi-count');
+  const payLoaded = document.getElementById('pay-kpi-loaded');
+  const payExpense = document.getElementById('pay-kpi-expense');
+  const payBalance = document.getElementById('pay-kpi-balance');
+
+  if (!tableBody) return;
+
+  let totalCount = 0;
+  let totalLoaded = 0;
+  let rowsHtml = '';
+
+  state.cycles.forEach((cycle, index) => {
+    const sNo = index + 1;
+    const cycleNum = `Cycle #${cycle.cycle_number}`;
+    const initialPaid = parseFloat(cycle.initial_paid || cycle.total_paid || 0);
+    const topUpPaid = parseFloat(cycle.topup_paid || 0);
+    const totalPaid = parseFloat(cycle.total_paid || 0);
+    const paidDate = formatDisplayDate(cycle.paid_on || cycle.start_date);
+
+    totalLoaded += totalPaid;
+    totalCount += 1;
+
+    rowsHtml += `
+      <tr>
+        <td style="font-weight: 700;">#${sNo}</td>
+        <td><span style="display: inline-block; padding: 2px 8px; background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: 9999px; font-weight: 700; color: var(--accent-matcha);">${cycleNum}</span></td>
+        <td>${paidDate}</td>
+        <td style="font-weight: 700; color: var(--accent-matcha);">₹${initialPaid.toFixed(2)}</td>
+        <td>${topUpPaid > 0 ? `<span style="color: var(--accent-emerald); font-weight: 700;">+₹${topUpPaid.toFixed(2)}</span>` : '₹0.00'}</td>
+        <td style="font-weight: 800; color: var(--accent-matcha);">₹${totalPaid.toFixed(2)}</td>
+        <td><span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Active Cycle</span></td>
+      </tr>
+    `;
+  });
+
+  if (state.cycles.length === 0) {
+    rowsHtml = `
+      <tr>
+        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px 0; font-weight: 600;">
+          No payment records found. Start a new cycle to record initial payments.
+        </td>
+      </tr>
+    `;
+  }
+
+  tableBody.innerHTML = rowsHtml;
+
+  const eatenMeals = Object.values(state.meals).filter(m => m.status === 'eaten' || m.status === 'special');
+  const totalConsumedExpense = eatenMeals.reduce((sum, m) => sum + (m.rate_snapshot || 0), 0);
+  const netBal = totalLoaded - totalConsumedExpense;
+
+  if (payCount) payCount.innerText = totalCount;
+  if (payLoaded) payLoaded.innerText = `₹${totalLoaded.toFixed(2)}`;
+  if (payExpense) payExpense.innerText = `₹${totalConsumedExpense.toFixed(2)}`;
+  if (payBalance) payBalance.innerText = `₹${netBal.toFixed(2)}`;
+}
+
+// Open Reset Options Modal & Populate Cycle Selection
+function openResetModal() {
+  triggerHaptic();
+  const select = document.getElementById('reset-cycle-select');
+  if (select) {
+    let options = `<option value="">-- Choose cycle to delete --</option>`;
+    state.cycles.forEach(c => {
+      options += `<option value="${c.id}">Cycle #${c.cycle_number} (${formatDisplayDate(c.start_date)} to ${formatDisplayDate(c.end_date)})</option>`;
+    });
+    select.innerHTML = options;
+  }
+  openModal('modal-reset-options');
+}
+
+// Delete Selected Cycle Handler
+async function deleteSelectedCycle() {
+  const select = document.getElementById('reset-cycle-select');
+  const cycleId = select ? select.value : '';
+
+  if (!cycleId) {
+    showToast("Please select a cycle to delete");
+    return;
+  }
+
+  const selectedCycleObj = state.cycles.find(c => String(c.id) === String(cycleId));
+  const cycleName = selectedCycleObj ? `Cycle #${selectedCycleObj.cycle_number}` : `Cycle`;
+
+  if (!confirm(`Are you sure you want to delete ${cycleName} and all its attendance & payment logs?`)) {
+    return;
+  }
+
+  triggerHaptic();
+  try {
+    const res = await fetch(`/api/cycles/${cycleId}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (data.success) {
+      if (state.selectedCycleId === String(cycleId)) {
+        state.selectedCycleId = 'all';
+        localStorage.removeItem('dabba_selected_cycle');
+      }
+      closeModal('modal-reset-options');
+      await refreshAppState();
+      showToast(`${cycleName} deleted successfully!`);
+    } else {
+      showToast("Error deleting cycle: " + (data.error || 'Failed'));
+    }
+  } catch (err) {
+    console.error("Error deleting cycle:", err);
+    showToast("Failed to connect to server");
   }
 }

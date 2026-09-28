@@ -24,21 +24,21 @@
         <!-- Categorized Navigation Menu -->
         <div class="nav-category">MAIN</div>
         <nav class="nav-menu">
-          <a class="nav-item active">Dashboard</a>
+          <a class="nav-item active" id="nav-dashboard" onclick="switchView('dashboard')">Dashboard</a>
           <a class="nav-item" onclick="openModal('modal-new-cycle')">New Cycle</a>
-          <a class="nav-item" onclick="openPaymentsModal()">Payments</a>
-          <a class="nav-item" style="color: var(--accent-rose);" onclick="hardResetDatabase()">Reset DB</a>
+          <a class="nav-item" id="nav-payments" onclick="switchView('payments')">Payments</a>
         </nav>
       </div>
 
       <div class="sidebar-footer">
         <div class="user-profile-badge">
           <div class="avatar-circle">TR</div>
-          <div>
-            <div style="font-size: 0.82rem; font-weight: 700;">Taksheel Rawat</div>
-            <div style="font-size: 0.68rem; color: var(--text-muted);">Local User</div>
+          <div class="user-info-text">
+            <div style="font-size: 0.8rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Taksheel Rawat</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted); white-space: nowrap;">Local User</div>
           </div>
         </div>
+        <button class="btn-reset-circle" onclick="openResetModal()" title="Reset / Delete Cycle Data">R</button>
       </div>
     </aside>
 
@@ -56,151 +56,217 @@
     <!-- Main Content Workspace -->
     <main class="main-content">
       
-      <!-- Unified Page Header Bar -->
-      <header class="page-header">
-        <div>
-          <h1 class="page-title">Dashboard</h1>
-          <p class="page-subtitle">Real-time operational KPIs across tiffin credits, attendance, and cycle balances.</p>
-        </div>
-        
-        <!-- Clean Uniform Cycle Dropdown Filter -->
-        <div>
-          <select id="cycle-select" class="custom-select" onchange="onCycleChange()">
-            <option value="all">All Cycles (Lifetime)</option>
-          </select>
-        </div>
-      </header>
-
-      <!-- UNIFIED 3-COLUMN DASHBOARD GRID (Edge-to-Edge Fill) -->
-      <section class="dashboard-3col-grid">
-        
-        <!-- Column 1 (Huge / Left): Attendance Calendar -->
-        <div id="calendar-card" class="calendar-card">
-          <div class="calendar-nav">
-            <button class="btn-icon" onclick="changeMonth(-1)">&lt;</button>
-            <div id="month-year-label" class="month-label">September 2026</div>
-            <button class="btn-icon" onclick="changeMonth(1)">&gt;</button>
-          </div>
-
-          <div style="position: relative; flex: 1; display: flex; flex-direction: column;">
-            <div class="calendar-grid" id="calendar-grid">
-              <div class="weekday-header">Sun</div>
-              <div class="weekday-header">Mon</div>
-              <div class="weekday-header">Tue</div>
-              <div class="weekday-header">Wed</div>
-              <div class="weekday-header">Thu</div>
-              <div class="weekday-header">Fri</div>
-              <div class="weekday-header">Sat</div>
-            </div>
-
-            <!-- Calendar Legend Indicator Bar -->
-            <div class="calendar-legend">
-              <span class="legend-item"><span class="legend-dot veg"></span> Veg Meal</span>
-              <span class="legend-item"><span class="legend-dot nonveg"></span> Non-Veg Meal</span>
-              <span class="legend-item"><span class="legend-dot unselected"></span> Skipped</span>
-            </div>
-
-            <!-- Centered Frozen Calendar Lock Overlay Badge -->
-            <div id="calendar-center-lock" class="calendar-center-lock">
-              <div class="center-lock-text">Please select a valid cycle from the dropdown to view or log daily meals</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Column 2 (Middle): 8 KPI Mini-Cards Grid (2x4) -->
-        <div class="kpi-vertical-column">
-          <div class="kpi-mini-card kpi-card-balance">
-            <div class="kpi-mini-label"><span class="kpi-dot green"></span> Balance</div>
-            <div id="kpi-balance" class="kpi-mini-val" style="color: var(--accent-matcha);">₹0.00</div>
-            <div id="kpi-balance-sub" class="kpi-mini-sub">Remaining Cash</div>
-          </div>
-
-          <div class="kpi-mini-card kpi-card-covered">
-            <div class="kpi-mini-label"><span class="kpi-dot cyan"></span> Covered</div>
-            <div id="kpi-days-covered" class="kpi-mini-val">0</div>
-            <div class="kpi-mini-sub">Prepaid Days</div>
-          </div>
-
-          <div class="kpi-mini-card kpi-card-veg">
-            <div class="kpi-mini-label"><span class="kpi-dot green"></span> Veg Meals</div>
-            <div id="kpi-veg-cnt" class="kpi-mini-val" style="color: var(--accent-emerald);">0</div>
-            <div class="kpi-mini-sub">Green Tiles</div>
-          </div>
-
-          <div class="kpi-mini-card kpi-card-nonveg">
-            <div class="kpi-mini-label"><span class="kpi-dot red"></span> Non-Veg Meals</div>
-            <div id="kpi-nonveg-cnt" class="kpi-mini-val" style="color: var(--accent-rose);">0</div>
-            <div class="kpi-mini-sub">Red Tiles</div>
-          </div>
-
-          <div class="kpi-mini-card kpi-card-cycles">
-            <div class="kpi-mini-label"><span class="kpi-dot indigo"></span> Total Cycles</div>
-            <div id="kpi-total-cycles" class="kpi-mini-val">0</div>
-            <div class="kpi-mini-sub">Logged Till Date</div>
-          </div>
-
-          <div class="kpi-mini-card kpi-card-loaded">
-            <div class="kpi-mini-label"><span class="kpi-dot cyan"></span> Money Loaded</div>
-            <div id="kpi-total-loaded" class="kpi-mini-val" style="color: var(--accent-matcha);">₹0.00</div>
-            <div class="kpi-mini-sub">All Payments</div>
-          </div>
-
-          <div class="kpi-mini-card kpi-card-skipped">
-            <div class="kpi-mini-label"><span class="kpi-dot gray"></span> Skipped</div>
-            <div id="kpi-skipped-cnt" class="kpi-mini-val" style="color: var(--text-muted);">0</div>
-            <div class="kpi-mini-sub">Un-eaten Days</div>
-          </div>
-
-          <div class="kpi-mini-card kpi-card-expense">
-            <div class="kpi-mini-label"><span class="kpi-dot orange"></span> Total Expense</div>
-            <div id="kpi-total-expense" class="kpi-mini-val">₹0.00</div>
-            <div class="kpi-mini-sub">Consumed Money</div>
-          </div>
-        </div>
-
-        <!-- Column 3 (Medium / Right): Active Cycle Summary Ledger -->
-        <div class="ledger-breakdown-card">
+      <!-- PAGE VIEW 1: DASHBOARD -->
+      <div id="view-dashboard" class="page-view active">
+        <!-- Unified Page Header Bar -->
+        <header class="page-header">
           <div>
-            <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Active Cycle Summary</div>
-            <h3 id="ledger-cycle-title" style="font-size: 1.15rem; font-weight: 800; margin-top: 4px; letter-spacing: -0.02em;">Lifetime Overview (0)</h3>
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtitle">Real-time operational KPIs across tiffin credits, attendance, and cycle balances.</p>
+          </div>
+          
+          <!-- Clean Uniform Cycle Dropdown Filter -->
+          <div>
+            <select id="cycle-select" class="custom-select" onchange="onCycleChange()">
+              <option value="all">All Cycles (Lifetime)</option>
+            </select>
+          </div>
+        </header>
+
+        <!-- UNIFIED 3-COLUMN DASHBOARD GRID (Edge-to-Edge Fill) -->
+        <section class="dashboard-3col-grid">
+          
+          <!-- Column 1 (Huge / Left): Attendance Calendar -->
+          <div id="calendar-card" class="calendar-card">
+            <div class="calendar-nav">
+              <button class="btn-icon" onclick="changeMonth(-1)">&lt;</button>
+              <div id="month-year-label" class="month-label">September 2026</div>
+              <button class="btn-icon" onclick="changeMonth(1)">&gt;</button>
+            </div>
+
+            <div style="position: relative; flex: 1; display: flex; flex-direction: column;">
+              <div class="calendar-grid" id="calendar-grid">
+                <div class="weekday-header">Sun</div>
+                <div class="weekday-header">Mon</div>
+                <div class="weekday-header">Tue</div>
+                <div class="weekday-header">Wed</div>
+                <div class="weekday-header">Thu</div>
+                <div class="weekday-header">Fri</div>
+                <div class="weekday-header">Sat</div>
+              </div>
+
+              <!-- Calendar Legend Indicator Bar -->
+              <div class="calendar-legend">
+                <span class="legend-item"><span class="legend-dot veg"></span> Veg Meal</span>
+                <span class="legend-item"><span class="legend-dot nonveg"></span> Non-Veg Meal</span>
+                <span class="legend-item"><span class="legend-dot unselected"></span> Skipped</span>
+              </div>
+
+              <!-- Centered Frozen Calendar Lock Overlay Badge -->
+              <div id="calendar-center-lock" class="calendar-center-lock">
+                <div class="center-lock-text">Please select a valid cycle from the dropdown to view or log daily meals</div>
+              </div>
+            </div>
           </div>
 
-          <!-- Cycle Completion Progress Bar -->
-          <div class="cycle-progress-container">
-            <div class="progress-label-row">
-              <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">Cycle Completion</span>
-              <span id="cycle-progress-percent" style="font-size: 0.75rem; font-weight: 700; color: var(--accent-matcha);">0%</span>
+          <!-- Column 2 (Middle): 8 KPI Mini-Cards Grid (2x4) -->
+          <div class="kpi-vertical-column">
+            <div class="kpi-mini-card kpi-card-balance">
+              <div class="kpi-mini-label"><span class="kpi-dot green"></span> Balance</div>
+              <div id="kpi-balance" class="kpi-mini-val" style="color: var(--accent-matcha);">₹0.00</div>
+              <div id="kpi-balance-sub" class="kpi-mini-sub">Remaining Cash</div>
             </div>
-            <div class="progress-track">
-              <div id="cycle-progress-bar" class="progress-fill" style="width: 0%;"></div>
+
+            <div class="kpi-mini-card kpi-card-covered">
+              <div class="kpi-mini-label"><span class="kpi-dot cyan"></span> Covered</div>
+              <div id="kpi-days-covered" class="kpi-mini-val">0</div>
+              <div class="kpi-mini-sub">Prepaid Days</div>
+            </div>
+
+            <div class="kpi-mini-card kpi-card-veg">
+              <div class="kpi-mini-label"><span class="kpi-dot green"></span> Veg Meals</div>
+              <div id="kpi-veg-cnt" class="kpi-mini-val" style="color: var(--accent-emerald);">0</div>
+              <div class="kpi-mini-sub">Green Tiles</div>
+            </div>
+
+            <div class="kpi-mini-card kpi-card-nonveg">
+              <div class="kpi-mini-label"><span class="kpi-dot red"></span> Non-Veg Meals</div>
+              <div id="kpi-nonveg-cnt" class="kpi-mini-val" style="color: var(--accent-rose);">0</div>
+              <div class="kpi-mini-sub">Red Tiles</div>
+            </div>
+
+            <div class="kpi-mini-card kpi-card-cycles">
+              <div class="kpi-mini-label"><span class="kpi-dot indigo"></span> Total Cycles</div>
+              <div id="kpi-total-cycles" class="kpi-mini-val">0</div>
+              <div class="kpi-mini-sub">Logged Till Date</div>
+            </div>
+
+            <div class="kpi-mini-card kpi-card-loaded">
+              <div class="kpi-mini-label"><span class="kpi-dot cyan"></span> Money Loaded</div>
+              <div id="kpi-total-loaded" class="kpi-mini-val" style="color: var(--accent-matcha);">₹0.00</div>
+              <div class="kpi-mini-sub">All Payments</div>
+            </div>
+
+            <div class="kpi-mini-card kpi-card-skipped">
+              <div class="kpi-mini-label"><span class="kpi-dot gray"></span> Skipped</div>
+              <div id="kpi-skipped-cnt" class="kpi-mini-val" style="color: var(--text-muted);">0</div>
+              <div class="kpi-mini-sub">Un-eaten Days</div>
+            </div>
+
+            <div class="kpi-mini-card kpi-card-expense">
+              <div class="kpi-mini-label"><span class="kpi-dot orange"></span> Total Expense</div>
+              <div id="kpi-total-expense" class="kpi-mini-val">₹0.00</div>
+              <div class="kpi-mini-sub">Consumed Money</div>
             </div>
           </div>
 
-          <div style="margin-top: auto; margin-bottom: auto;">
-            <div class="ledger-item-row">
-              <span style="font-size: 0.8rem; color: var(--text-secondary);">Cycle Range</span>
-              <span id="ledger-range" style="font-size: 0.85rem; font-weight: 600;">-</span>
+          <!-- Column 3 (Medium / Right): Active Cycle Summary Ledger -->
+          <div class="ledger-breakdown-card">
+            <div>
+              <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Active Cycle Summary</div>
+              <h3 id="ledger-cycle-title" style="font-size: 1.15rem; font-weight: 800; margin-top: 4px; letter-spacing: -0.02em;">Lifetime Overview (0)</h3>
             </div>
-            <div class="ledger-item-row">
-              <span style="font-size: 0.8rem; color: var(--text-secondary);">Daily Rate</span>
-              <span id="ledger-rate" style="font-size: 0.85rem; font-weight: 600;">-</span>
+
+            <!-- Cycle Completion Progress Bar -->
+            <div class="cycle-progress-container">
+              <div class="progress-label-row">
+                <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">Cycle Completion</span>
+                <span id="cycle-progress-percent" style="font-size: 0.75rem; font-weight: 700; color: var(--accent-matcha);">0%</span>
+              </div>
+              <div class="progress-track">
+                <div id="cycle-progress-bar" class="progress-fill" style="width: 0%;"></div>
+              </div>
             </div>
-            <div class="ledger-item-row">
-              <span style="font-size: 0.8rem; color: var(--text-secondary);">Total Paid</span>
-              <span id="ledger-paid" style="font-size: 0.85rem; font-weight: 700; color: var(--accent-matcha);">-</span>
+
+            <div style="margin-top: auto; margin-bottom: auto;">
+              <div class="ledger-item-row">
+                <span style="font-size: 0.8rem; color: var(--text-secondary);">Cycle Range</span>
+                <span id="ledger-range" style="font-size: 0.85rem; font-weight: 600;">-</span>
+              </div>
+              <div class="ledger-item-row">
+                <span style="font-size: 0.8rem; color: var(--text-secondary);">Daily Rate</span>
+                <span id="ledger-rate" style="font-size: 0.85rem; font-weight: 600;">-</span>
+              </div>
+              <div class="ledger-item-row">
+                <span style="font-size: 0.8rem; color: var(--text-secondary);">Total Paid</span>
+                <span id="ledger-paid" style="font-size: 0.85rem; font-weight: 700; color: var(--accent-matcha);">-</span>
+              </div>
+              <div class="ledger-item-row">
+                <span style="font-size: 0.8rem; color: var(--text-secondary);">Consumed Expense</span>
+                <span id="ledger-expense" style="font-size: 0.85rem; font-weight: 600;">-</span>
+              </div>
             </div>
-            <div class="ledger-item-row">
-              <span style="font-size: 0.8rem; color: var(--text-secondary);">Consumed Expense</span>
-              <span id="ledger-expense" style="font-size: 0.85rem; font-weight: 600;">-</span>
+
+            <div style="margin-top: 14px;">
+              <button id="btn-topup" class="btn-dashboard btn-dashboard-primary" style="width: 100%; height: 40px; font-size: 0.84rem;" onclick="openTopUpModal()">+ Top Up Payment</button>
             </div>
           </div>
 
-          <div style="margin-top: 14px;">
-            <button id="btn-topup" class="btn-dashboard btn-dashboard-primary" style="width: 100%; height: 40px; font-size: 0.84rem;" onclick="openTopUpModal()">+ Top Up Payment</button>
+        </section>
+      </div>
+
+      <!-- PAGE VIEW 2: PAYMENTS WORKSPACE -->
+      <div id="view-payments" class="page-view hidden">
+        <header class="page-header">
+          <div>
+            <h1 class="page-title">Payments Ledger</h1>
+            <p class="page-subtitle">Real-time operational logs across initial cycle credits, top-up payments, and cycle balances.</p>
+          </div>
+        </header>
+
+        <!-- Payments KPI Overview Cards -->
+        <div class="payments-kpi-grid">
+          <div class="kpi-mini-card">
+            <div class="kpi-mini-label"><span class="kpi-dot indigo"></span> Total Logs</div>
+            <div id="pay-kpi-count" class="kpi-mini-val">0</div>
+            <div class="kpi-mini-sub">Payment Transactions</div>
+          </div>
+          <div class="kpi-mini-card">
+            <div class="kpi-mini-label"><span class="kpi-dot green"></span> Cash Loaded</div>
+            <div id="pay-kpi-loaded" class="kpi-mini-val" style="color: var(--accent-matcha);">₹0.00</div>
+            <div class="kpi-mini-sub">All Received Payments</div>
+          </div>
+          <div class="kpi-mini-card">
+            <div class="kpi-mini-label"><span class="kpi-dot orange"></span> Consumed Expense</div>
+            <div id="pay-kpi-expense" class="kpi-mini-val">₹0.00</div>
+            <div class="kpi-mini-sub">Total Meal Costs</div>
+          </div>
+          <div class="kpi-mini-card">
+            <div class="kpi-mini-label"><span class="kpi-dot cyan"></span> Net Balance</div>
+            <div id="pay-kpi-balance" class="kpi-mini-val" style="color: var(--accent-emerald);">₹0.00</div>
+            <div class="kpi-mini-sub">Remaining Funds</div>
           </div>
         </div>
 
-      </section>
+        <!-- Full-Width Payments Table Section -->
+        <div class="payments-full-card">
+          <div style="padding: 18px 22px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 800;">Transaction History & Cycle Ledger</h3>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">Row-wise log of initial cycle payments, payment dates, and top-up add-ons across all active cycles.</p>
+            </div>
+          </div>
+
+          <div class="payments-table-container-full">
+            <table class="payments-table">
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Cycle</th>
+                  <th>Payment Date</th>
+                  <th>Initial Payment</th>
+                  <th>Add-Ons / Top-Ups</th>
+                  <th>Total Paid</th>
+                  <th>Type / Notes</th>
+                </tr>
+              </thead>
+              <tbody id="full-payments-table-body">
+                <!-- Dynamically populated row wise -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
       <!-- Workspace Page Footer -->
       <footer class="dashboard-footer">
@@ -332,9 +398,35 @@
         </table>
       </div>
 
-      <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
-        <button class="btn-dashboard" onclick="closeModal('modal-payments-history')">Close</button>
+  <!-- Modal: Reset & Single Cycle Deletion -->
+  <div id="modal-reset-options" class="modal-overlay">
+    <div class="modal-card" style="max-width: 440px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--accent-rose);">Reset & Delete Options</h3>
+        <button class="btn-icon" onclick="closeModal('modal-reset-options')" style="width: 32px; height: 32px; font-size: 0.9rem;">✕</button>
       </div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: -10px;">Delete a specific cycle and all its records, or wipe the entire database.</p>
+
+      <div class="form-group" style="margin-top: 4px;">
+        <label class="form-label">Select Specific Cycle to Delete</label>
+        <select id="reset-cycle-select" class="custom-select" style="width: 100%;">
+          <option value="">-- Choose cycle --</option>
+        </select>
+      </div>
+
+      <button class="btn-dashboard btn-dashboard-primary" style="background: var(--accent-rose); border-color: var(--accent-rose); width: 100%; font-weight: 700;" onclick="deleteSelectedCycle()">
+        🗑️ Delete Selected Cycle
+      </button>
+
+      <div style="text-align: center; font-size: 0.72rem; color: var(--text-muted); margin: 4px 0; display: flex; align-items: center; gap: 8px;">
+        <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+        <span>OR</span>
+        <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+      </div>
+
+      <button class="btn-dashboard btn-white-bar" style="color: var(--accent-rose) !important; width: 100%; font-weight: 800;" onclick="hardResetDatabase()">
+        💥 Wipe Entire Database (Hard Reset)
+      </button>
     </div>
   </div>
 
