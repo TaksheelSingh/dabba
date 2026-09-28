@@ -26,6 +26,7 @@
         <nav class="nav-menu">
           <a class="nav-item active">Dashboard</a>
           <a class="nav-item" onclick="openModal('modal-new-cycle')">New Cycle</a>
+          <a class="nav-item" onclick="openPaymentsModal()">Payments</a>
         </nav>
       </div>
 
@@ -297,6 +298,41 @@
         <button class="btn-dashboard btn-white-bar" onclick="submitSpecialMeal()">Non-Veg Meal</button>
         <button class="btn-dashboard btn-white-bar" onclick="removeMealFromModal()">Unselect Meal</button>
         <button class="btn-dashboard" style="margin-top: 4px;" onclick="closeModal('modal-special-meal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Row-Wise Payments Ledger History -->
+  <div id="modal-payments-history" class="modal-overlay">
+    <div class="modal-card" style="max-width: 680px; width: 95%;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h3 style="font-size: 1.2rem; font-weight: 800;">Payments Ledger</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">Row-wise log of initial cycle payments and top-up add-ons.</p>
+        </div>
+        <button class="btn-icon" onclick="closeModal('modal-payments-history')" style="width: 32px; height: 32px; font-size: 0.9rem;">✕</button>
+      </div>
+
+      <div class="payments-table-container">
+        <table class="payments-table">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Cycle</th>
+              <th>Payment Date</th>
+              <th>Initial Payment</th>
+              <th>Add-Ons</th>
+              <th>Total Paid</th>
+            </tr>
+          </thead>
+          <tbody id="payments-table-body">
+            <!-- Dynamically populated row wise -->
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+        <button class="btn-dashboard" onclick="closeModal('modal-payments-history')">Close</button>
       </div>
     </div>
   </div>

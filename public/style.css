@@ -155,21 +155,21 @@ header.page-header {
 
 header.mobile-header { display: none; }
 
-/* Uniform Styled Select Dropdown */
+/* Uniform Styled Select Dropdown (Pill / Stadium Shape) */
 select.custom-select {
   height: 42px; background-color: var(--surface-card); border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm); color: var(--text-primary); padding: 0 36px 0 14px; font-size: 0.88rem;
+  border-radius: 9999px !important; color: var(--text-primary); padding: 0 40px 0 18px; font-size: 0.88rem;
   font-weight: 600; font-family: var(--font-sans); outline: none; cursor: pointer;
   -webkit-appearance: none; -moz-appearance: none; appearance: none;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-  background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;
+  background-repeat: no-repeat; background-position: right 14px center; background-size: 16px;
 }
 select.custom-select:focus { border-color: var(--accent-matcha); }
 
 /* Toast Alert Message */
 .toast-msg {
   position: fixed; top: 20px; right: 20px; background: rgba(245, 158, 11, 0.95); color: #000;
-  font-size: 0.85rem; font-weight: 700; padding: 12px 18px; border-radius: var(--radius-sm);
+  font-size: 0.85rem; font-weight: 700; padding: 12px 18px; border-radius: 9999px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); z-index: 2000; opacity: 0; pointer-events: none;
   transform: translateY(-10px); transition: all 0.2s ease;
 }
@@ -289,9 +289,9 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 .legend-dot.nonveg { background: var(--accent-rose); box-shadow: 0 0 6px rgba(239, 68, 68, 0.5); }
 .legend-dot.unselected { background: var(--surface-elevated); border: 1px solid var(--border-subtle); }
 
-/* Col 2: 8 KPI Cards Grid (2 Columns x 4 Rows) */
+/* Col 2: 8 KPI Cards Grid (Compact Spacing & Pill Shapes) */
 .kpi-vertical-column {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; justify-content: stretch; align-content: space-between; height: 100%;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; justify-content: stretch; align-content: start; height: 100%;
 }
 
 .kpi-mini-card {
@@ -350,9 +350,9 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 }
 .ledger-item-row:last-child { border-bottom: none; }
 
-/* Modals & Dashboard Controls */
+/* Modals & Dashboard Controls (Stadium / Pill Rounded Shapes) */
 .btn-dashboard {
-  height: 42px; padding: 0 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);
+  height: 42px; padding: 0 20px; border-radius: 9999px !important; border: 1px solid var(--border-subtle);
   background: var(--surface-elevated); color: var(--text-primary); font-size: 0.88rem; font-weight: 600;
   font-family: var(--font-sans); cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
   transition: all 0.15s ease;
@@ -365,8 +365,36 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
   font-weight: 700 !important;
   border: 1px solid rgba(0, 0, 0, 0.15) !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 9999px !important;
 }
 .btn-white-bar:hover { background: #F8FAFC !important; }
+
+.nav-item {
+  border-radius: 9999px !important;
+}
+
+.user-profile-badge {
+  border-radius: 9999px !important;
+}
+
+/* Payments History Row-Wise Data Table */
+.payments-table-container {
+  max-height: 360px; overflow-y: auto; border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+  margin-top: 10px;
+}
+.payments-table {
+  width: 100%; border-collapse: collapse; font-size: 0.82rem; text-align: left;
+}
+.payments-table th {
+  background: var(--surface-elevated); padding: 12px 14px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border-subtle);
+  position: sticky; top: 0; z-index: 5;
+}
+.payments-table td {
+  padding: 12px 14px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); font-weight: 600;
+}
+.payments-table tbody tr:last-child td { border-bottom: none; }
+.payments-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
 
 .btn-icon {
   width: 42px; height: 42px; background: var(--surface-card); border: 1px solid var(--border-subtle);

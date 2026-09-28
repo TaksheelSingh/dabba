@@ -235,7 +235,11 @@ function populateCycleDropdown() {
   
   select.innerHTML = '<option value="all">All Cycles (Lifetime)</option>';
 
+  const seenCycleNumbers = new Set();
   state.cycles.forEach((c) => {
+    if (seenCycleNumbers.has(c.cycle_number)) return;
+    seenCycleNumbers.add(c.cycle_number);
+
     const optionText = `Cycle ${c.cycle_number} - ${formatShortDateYear(c.start_date)} to ${formatShortDateYear(c.end_date)}`;
     
     const opt = document.createElement('option');
@@ -460,6 +464,19 @@ function changeMonth(delta) {
 }
 
 async function postMealToggle(dateStr, status, customRate = null) {
+  // Optimistic UI update for instant (0ms) responsiveness
+  if (status === 'none') {
+    delete state.meals[dateStr];
+  } else {
+    state.meals[dateStr] = {
+      date: dateStr,
+      status: status,
+      rate_snapshot: customRate || 90
+    };
+  }
+  renderCalendar();
+  updateDashboardSymmetry();
+
   try {
     const res = await fetch('/api/meals/toggle', {
       method: 'POST',
@@ -473,6 +490,50 @@ async function postMealToggle(dateStr, status, customRate = null) {
   } catch (err) {
     console.error("Error toggling meal:", err);
   }
+}
+
+// Payments Ledger Table Renderer
+function openPaymentsModal() {
+  renderPaymentsTable();
+  openModal('modal-payments-history');
+}
+
+function renderPaymentsTable() {
+  const tbody = document.getElementById('payments-table-body');
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+
+  if (!state.cycles || state.cycles.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">No payment records logged yet.</td></tr>`;
+    return;
+  }
+
+  // Deduplicate and render row-wise cycles payments
+  const seenCycleNums = new Set();
+  let sNo = 1;
+
+  state.cycles.forEach(c => {
+    if (seenCycleNums.has(c.cycle_number)) return;
+    seenCycleNums.add(c.cycle_number);
+
+    const payments = c.payments || [];
+    const initialPayment = payments.length > 0 ? payments[0].amount : (c.total_paid || 0);
+    const addOns = payments.length > 1 
+      ? payments.slice(1).reduce((sum, p) => sum + p.amount, 0)
+      : 0;
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td style="font-weight: 700; color: var(--text-muted);">#${sNo++}</td>
+      <td style="font-weight: 700; color: var(--accent-matcha);">Cycle #${c.cycle_number}</td>
+      <td>${formatShortDateYear(c.start_date)}</td>
+      <td style="font-weight: 700;">₹${initialPayment.toFixed(2)}</td>
+      <td style="color: ${addOns > 0 ? 'var(--accent-matcha)' : 'var(--text-muted)'};">₹${addOns.toFixed(2)}</td>
+      <td style="font-weight: 800; color: var(--accent-matcha);">₹${c.total_paid.toFixed(2)}</td>
+    `;
+    tbody.appendChild(row);
+  });
 }
 
 // Special Meal (Yellow Tile) & Unselect Modal Handlers
