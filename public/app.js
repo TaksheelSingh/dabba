@@ -723,27 +723,31 @@ function switchView(viewName) {
 // Render Payments Workspace View
 function renderPaymentsView() {
   const tableBody = document.getElementById('full-payments-table-body');
-  const payCount = document.getElementById('pay-kpi-count');
-  const payLoaded = document.getElementById('pay-kpi-loaded');
-  const payExpense = document.getElementById('pay-kpi-expense');
-  const payBalance = document.getElementById('pay-kpi-balance');
+  const payLogsCount = document.getElementById('pay-kpi-count');
+  const payInitial = document.getElementById('pay-kpi-initial');
+  const payTopups = document.getElementById('pay-kpi-topups');
+  const payTotalLoaded = document.getElementById('pay-kpi-total-loaded');
 
   if (!tableBody) return;
 
-  let totalCount = 0;
-  let totalLoaded = 0;
+  let totalPaymentLogsCount = 0;
+  let totalInitialPaidSum = 0;
+  let totalTopUpsPaidSum = 0;
   let rowsHtml = '';
 
   state.cycles.forEach((cycle, index) => {
     const sNo = index + 1;
     const cycleNum = `Cycle #${cycle.cycle_number}`;
-    const initialPaid = parseFloat(cycle.initial_paid || cycle.total_paid || 0);
-    const topUpPaid = parseFloat(cycle.topup_paid || 0);
-    const totalPaid = parseFloat(cycle.total_paid || 0);
+    const payments = cycle.payments || [];
+    
+    const initialPaid = payments.length > 0 ? parseFloat(payments[0].amount) : parseFloat(cycle.initial_paid || cycle.total_paid || 0);
+    const topUpPaid = payments.length > 1 ? payments.slice(1).reduce((sum, p) => sum + parseFloat(p.amount), 0) : parseFloat(cycle.topup_paid || 0);
+    const totalPaid = parseFloat(cycle.total_paid || (initialPaid + topUpPaid));
     const paidDate = formatDisplayDate(cycle.paid_on || cycle.start_date);
 
-    totalLoaded += totalPaid;
-    totalCount += 1;
+    totalPaymentLogsCount += Math.max(1, payments.length);
+    totalInitialPaidSum += initialPaid;
+    totalTopUpsPaidSum += topUpPaid;
 
     rowsHtml += `
       <tr>
@@ -770,14 +774,12 @@ function renderPaymentsView() {
 
   tableBody.innerHTML = rowsHtml;
 
-  const eatenMeals = Object.values(state.meals).filter(m => m.status === 'eaten' || m.status === 'special');
-  const totalConsumedExpense = eatenMeals.reduce((sum, m) => sum + (m.rate_snapshot || 0), 0);
-  const netBal = totalLoaded - totalConsumedExpense;
+  const grandTotalMoneyLoaded = totalInitialPaidSum + totalTopUpsPaidSum;
 
-  if (payCount) payCount.innerText = totalCount;
-  if (payLoaded) payLoaded.innerText = `₹${totalLoaded.toFixed(2)}`;
-  if (payExpense) payExpense.innerText = `₹${totalConsumedExpense.toFixed(2)}`;
-  if (payBalance) payBalance.innerText = `₹${netBal.toFixed(2)}`;
+  if (payLogsCount) payLogsCount.innerText = totalPaymentLogsCount;
+  if (payInitial) payInitial.innerText = `₹${totalInitialPaidSum.toFixed(2)}`;
+  if (payTopups) payTopups.innerText = `₹${totalTopUpsPaidSum.toFixed(2)}`;
+  if (payTotalLoaded) payTotalLoaded.innerText = `₹${grandTotalMoneyLoaded.toFixed(2)}`;
 }
 
 // Open Reset Options Modal & Populate Cycle Selection

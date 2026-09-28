@@ -40,11 +40,16 @@ async function enrichCycle(cycle) {
   const remainingBalance = totalPaid - totalExpense;
   const daysCovered = dailyRate > 0 ? Math.max(0, Math.floor(remainingBalance / dailyRate)) : 0;
 
+  const initialPaid = payments.length > 0 ? payments[0].amount : cycle.daily_rate * 30;
+  const topUpPaid = payments.length > 1 ? payments.slice(1).reduce((sum, p) => sum + p.amount, 0) : 0;
+
   return {
     ...cycle,
     daily_rate: dailyRate,
     payments,
     total_paid: totalPaid,
+    initial_paid: initialPaid,
+    topup_paid: topUpPaid,
     eaten_count: eatenCount,
     skipped_count: skippedCount,
     total_expense: totalExpense,
