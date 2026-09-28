@@ -673,3 +673,22 @@ async function submitNewCycle() {
     console.error("Failed to create cycle:", err);
   }
 }
+
+async function hardResetDatabase() {
+  if (!confirm("Are you sure you want to permanently clear all database records (cycles, payments, meals)?")) {
+    return;
+  }
+  triggerHaptic();
+  try {
+    const res = await fetch('/api/reset-now');
+    const data = await res.json();
+    if (data.success) {
+      state.selectedCycleId = 'all';
+      localStorage.removeItem('dabba_selected_cycle');
+      await refreshAppState();
+      showToast("Database completely cleared!");
+    }
+  } catch (err) {
+    console.error("Failed to reset database:", err);
+  }
+}
