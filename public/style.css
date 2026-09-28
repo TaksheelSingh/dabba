@@ -3,23 +3,28 @@
  * ------------------------------------------------------------- */
 
 :root {
-  /* Dark Theme Default */
-  --bg-basalt: #0C1020;
-  --surface-sidebar: #070A14;
-  --surface-card: #12172A;
-  --surface-elevated: #1B2238;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(255, 255, 255, 0.2);
+  /* Dark Theme — High-End Obsidian & Mineral Slate Palette */
+  --bg-basalt: #0B0E14;
+  --surface-sidebar: #07090E;
+  --surface-card: #121620;
+  --surface-elevated: #1A202C;
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-focus: rgba(255, 255, 255, 0.20);
   
-  --text-primary: #F3F4F6;
+  --text-primary: #F8FAFC;
   --text-secondary: #94A3B8;
   --text-muted: #64748B;
   
   --accent-emerald: #10B981;
   --accent-matcha: #34D399;
   --accent-emerald-bg: rgba(16, 185, 129, 0.12);
-  --accent-rose: #EF4444;
+  --accent-rose: #F43F5E;
   --accent-amber: #F59E0B;
+  --accent-cyan: #38BDF8;
+  --accent-indigo: #818CF8;
+
+  --card-shadow-base: 0 2px 10px rgba(0, 0, 0, 0.25);
+  --card-shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.4);
   
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -29,14 +34,14 @@
   --font-mono: 'Geist Mono', 'SF Mono', monospace;
 }
 
-/* Light Theme Variables */
+/* Light Theme — Architectural Porcelain & Mineral Ink Palette */
 [data-theme="light"] {
-  --bg-basalt: #F8FAFC;
+  --bg-basalt: #F3F4F7;
   --surface-sidebar: #FFFFFF;
   --surface-card: #FFFFFF;
-  --surface-elevated: #F1F5F9;
-  --border-subtle: #E2E8F0;
-  --border-focus: #94A3B8;
+  --surface-elevated: #EBF0F5;
+  --border-subtle: rgba(15, 23, 42, 0.08);
+  --border-focus: rgba(15, 23, 42, 0.22);
   
   --text-primary: #0F172A;
   --text-secondary: #475569;
@@ -44,9 +49,14 @@
   
   --accent-emerald: #059669;
   --accent-matcha: #10B981;
-  --accent-emerald-bg: rgba(16, 185, 129, 0.10);
-  --accent-rose: #DC2626;
+  --accent-emerald-bg: rgba(5, 150, 105, 0.08);
+  --accent-rose: #E11D48;
   --accent-amber: #D97706;
+  --accent-cyan: #0284C7;
+  --accent-indigo: #4F46E5;
+
+  --card-shadow-base: 0 1px 3px rgba(15, 23, 42, 0.05);
+  --card-shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
 * {
@@ -341,12 +351,12 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 
 .kpi-mini-card {
   background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px 16px;
-  display: flex; flex-direction: column; justify-content: center; height: 100%;
+  display: flex; flex-direction: column; justify-content: center; height: 100%; box-shadow: var(--card-shadow-base);
   transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 .kpi-mini-card:hover {
   border-color: var(--border-focus); transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--card-shadow-hover);
 }
 
 .kpi-mini-label {
@@ -358,9 +368,9 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 }
 .kpi-dot.green { background: var(--accent-matcha); }
 .kpi-dot.red { background: var(--accent-rose); }
-.kpi-dot.cyan { background: #38BDF8; }
-.kpi-dot.indigo { background: #818CF8; }
-.kpi-dot.orange { background: #FB923C; }
+.kpi-dot.cyan { background: var(--accent-cyan); }
+.kpi-dot.indigo { background: var(--accent-indigo); }
+.kpi-dot.orange { background: var(--accent-amber); }
 .kpi-dot.gray { background: var(--text-muted); }
 
 .kpi-mini-val { font-size: 1.3rem; font-weight: 800; font-variant-numeric: tabular-nums; margin: 2px 0 1px 0; letter-spacing: -0.02em; }
