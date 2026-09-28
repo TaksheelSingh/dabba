@@ -592,5 +592,8 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
   
   .ledger-breakdown-card { padding: 18px 16px; width: 100%; }
   
+  .payments-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  .payments-table-container-full { max-height: 420px; overflow-x: auto; }
+
   .modal-card { max-width: 92vw; padding: 20px 16px; gap: 14px; }
 }

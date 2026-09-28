@@ -114,8 +114,8 @@ function onCyclePaymentInput() {
 
   clearTimeout(calcTimerPaid);
   calcTimerPaid = setTimeout(() => {
-    if (paidVal > 0 && rateInput) {
-      rateInput.value = (paidVal / 30).toFixed(2);
+    if (rateInput) {
+      rateInput.value = paidVal > 0 ? (paidVal / 30).toFixed(2) : '0';
     }
     if (spinner) spinner.classList.add('hidden');
     if (card) card.classList.remove('calculating-freeze');
@@ -133,8 +133,8 @@ function onCycleRateInput() {
 
   clearTimeout(calcTimerRate);
   calcTimerRate = setTimeout(() => {
-    if (rateVal > 0 && paidInput) {
-      paidInput.value = Math.round(rateVal * 30);
+    if (paidInput) {
+      paidInput.value = rateVal > 0 ? Math.round(rateVal * 30) : '0';
     }
     if (spinner) spinner.classList.add('hidden');
     if (card) card.classList.remove('calculating-freeze');
@@ -720,18 +720,24 @@ function switchView(viewName) {
   triggerHaptic();
   const navDash = document.getElementById('nav-dashboard');
   const navPay = document.getElementById('nav-payments');
+  const mNavDash = document.getElementById('mobile-nav-dash');
+  const mNavPay = document.getElementById('mobile-nav-pay');
   const viewDash = document.getElementById('view-dashboard');
   const viewPay = document.getElementById('view-payments');
 
   if (viewName === 'payments') {
     if (navDash) navDash.classList.remove('active');
     if (navPay) navPay.classList.add('active');
+    if (mNavDash) mNavDash.classList.remove('active');
+    if (mNavPay) mNavPay.classList.add('active');
     if (viewDash) viewDash.classList.add('hidden');
     if (viewPay) viewPay.classList.remove('hidden');
     renderPaymentsView();
   } else {
     if (navPay) navPay.classList.remove('active');
     if (navDash) navDash.classList.add('active');
+    if (mNavPay) mNavPay.classList.remove('active');
+    if (mNavDash) mNavDash.classList.add('active');
     if (viewPay) viewPay.classList.add('hidden');
     if (viewDash) viewDash.classList.remove('hidden');
   }
