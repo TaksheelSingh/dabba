@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  renderCalendar();
   initData();
 });
 
