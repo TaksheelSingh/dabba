@@ -142,8 +142,8 @@ header.mobile-header {
 
 /* Main Content Workspace */
 main.main-content {
-  flex: 1; padding: 28px 32px; max-width: 1400px; margin: 0 auto;
-  overflow-y: auto; display: flex; flex-direction: column; gap: 24px;
+  flex: 1; padding: 24px 28px; width: 100%; max-width: 100%; margin: 0;
+  overflow-y: auto; display: flex; flex-direction: column; gap: 20px;
   position: relative;
 }
 
@@ -180,9 +180,10 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
  * ------------------------------------------------------------- */
 .dashboard-3col-grid {
   display: grid;
-  grid-template-columns: 2.2fr 1fr 1.3fr;
-  gap: 18px;
+  grid-template-columns: 2.1fr 1.7fr 1.2fr;
+  gap: 16px;
   align-items: stretch;
+  width: 100%;
 }
 
 /* Col 1: Attendance Calendar Card */
@@ -268,18 +269,18 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 }
 
 .day-tile.state-special {
-  background: var(--accent-amber) !important; color: #000000 !important; font-weight: 800;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); border-color: var(--accent-amber) !important;
+  background: var(--accent-rose) !important; color: #FFFFFF !important; font-weight: 800;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); border-color: var(--accent-rose) !important;
 }
 
-/* Col 2: 4 KPI Cards Stacked Vertically */
+/* Col 2: 8 KPI Cards Grid (2 Columns x 4 Rows) */
 .kpi-vertical-column {
-  display: flex; flex-direction: column; gap: 12px; justify-content: space-between; height: 100%;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; justify-content: stretch; align-content: space-between; height: 100%;
 }
 
 .kpi-mini-card {
-  background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px 16px;
-  display: flex; flex-direction: column; justify-content: center; flex: 1;
+  background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px 14px;
+  display: flex; flex-direction: column; justify-content: center; flex: 1; min-height: 72px;
 }
 .kpi-mini-label { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
 .kpi-mini-val { font-size: 1.3rem; font-weight: 800; font-variant-numeric: tabular-nums; margin: 2px 0 1px 0; }

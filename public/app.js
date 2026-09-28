@@ -263,8 +263,12 @@ function showToast(msg) {
 function updateDashboardSymmetry() {
   const balanceEl = document.getElementById('kpi-balance');
   const daysCoveredEl = document.getElementById('kpi-days-covered');
-  const eatenCntEl = document.getElementById('kpi-eaten-cnt');
+  const vegCntEl = document.getElementById('kpi-veg-cnt');
+  const nonVegCntEl = document.getElementById('kpi-nonveg-cnt');
+  const totalCyclesEl = document.getElementById('kpi-total-cycles');
+  const totalLoadedEl = document.getElementById('kpi-total-loaded');
   const skippedCntEl = document.getElementById('kpi-skipped-cnt');
+  const totalExpenseEl = document.getElementById('kpi-total-expense');
 
   const ledgerTitle = document.getElementById('ledger-cycle-title');
   const ledgerRange = document.getElementById('ledger-range');
@@ -273,23 +277,32 @@ function updateDashboardSymmetry() {
   const ledgerExpense = document.getElementById('ledger-expense');
   const calendarCard = document.getElementById('calendar-card');
 
+  const allMealsList = Object.values(state.meals);
+  const totalVegAll = allMealsList.filter(m => m.status === 'eaten').length;
+  const totalNonVegAll = allMealsList.filter(m => m.status === 'special').length;
+  const totalLoadedAll = state.cycles.reduce((sum, c) => sum + (c.total_paid || 0), 0);
+
   if (state.selectedCycleId === 'all') {
     // Lock calendar visual state in overview mode
     if (calendarCard) calendarCard.classList.add('locked');
 
-    // In All Cycles overview mode, statistics reset to null / 0 defaults
-    balanceEl.innerText = `₹0.00`;
-    balanceEl.style.color = 'var(--text-muted)';
+    balanceEl.innerText = `₹${(state.telemetry.netBalance || 0).toFixed(2)}`;
+    balanceEl.style.color = (state.telemetry.netBalance >= 0) ? 'var(--accent-matcha)' : 'var(--accent-rose)';
     daysCoveredEl.innerText = 0;
-    eatenCntEl.innerText = 0;
-    skippedCntEl.innerText = 0;
+
+    if (vegCntEl) vegCntEl.innerText = totalVegAll;
+    if (nonVegCntEl) nonVegCntEl.innerText = totalNonVegAll;
+    if (totalCyclesEl) totalCyclesEl.innerText = state.cycles.length;
+    if (totalLoadedEl) totalLoadedEl.innerText = `₹${totalLoadedAll.toFixed(2)}`;
+    if (skippedCntEl) skippedCntEl.innerText = state.telemetry.lifetimeSkippedCount || 0;
+    if (totalExpenseEl) totalExpenseEl.innerText = `₹${(state.telemetry.lifetimeExpense || 0).toFixed(2)}`;
 
     // Clean Ledger Header Title with Cycle Count increment
     ledgerTitle.innerText = `Lifetime Overview (${state.cycles.length})`;
     ledgerRange.innerText = `All Time`;
     ledgerRate.innerText = `Avg ₹0/day`;
-    ledgerPaid.innerText = `₹0.00`;
-    ledgerExpense.innerText = `₹0.00`;
+    ledgerPaid.innerText = `₹${totalLoadedAll.toFixed(2)}`;
+    ledgerExpense.innerText = `₹${(state.telemetry.lifetimeExpense || 0).toFixed(2)}`;
 
   } else {
     // Unlock calendar visual state when cycle is selected
@@ -302,8 +315,18 @@ function updateDashboardSymmetry() {
       balanceEl.style.color = bal >= 0 ? 'var(--accent-matcha)' : 'var(--accent-rose)';
 
       daysCoveredEl.innerText = cycle.days_covered;
-      eatenCntEl.innerText = cycle.eaten_count;
-      skippedCntEl.innerText = cycle.skipped_count;
+
+      // Filter meals specifically for selected cycle range
+      const cycleMeals = allMealsList.filter(m => m.date >= cycle.start_date && m.date <= cycle.end_date);
+      const vegCount = cycleMeals.filter(m => m.status === 'eaten').length;
+      const nonVegCount = cycleMeals.filter(m => m.status === 'special').length;
+
+      if (vegCntEl) vegCntEl.innerText = vegCount;
+      if (nonVegCntEl) nonVegCntEl.innerText = nonVegCount;
+      if (totalCyclesEl) totalCyclesEl.innerText = state.cycles.length;
+      if (totalLoadedEl) totalLoadedEl.innerText = `₹${cycle.total_paid.toFixed(2)}`;
+      if (skippedCntEl) skippedCntEl.innerText = cycle.skipped_count;
+      if (totalExpenseEl) totalExpenseEl.innerText = `₹${cycle.total_expense.toFixed(2)}`;
 
       ledgerTitle.innerText = `Cycle #${cycle.cycle_number}`;
       ledgerRange.innerText = `${formatShortDateYear(cycle.start_date)} - ${formatShortDateYear(cycle.end_date)}`;
@@ -370,10 +393,10 @@ function renderCalendar() {
         if (meal) {
           if (meal.status === 'eaten') {
             tile.classList.add('state-eaten');
-            tile.title = `Eaten Meal (Standard Rate: ₹${meal.rate_snapshot})`;
+            tile.title = `Veg Meal (Standard Rate: ₹${meal.rate_snapshot})`;
           } else if (meal.status === 'special') {
             tile.classList.add('state-special');
-            tile.title = `Special Meal (Custom Expense: ₹${meal.rate_snapshot})`;
+            tile.title = `Non-Veg Meal (Custom Expense: ₹${meal.rate_snapshot})`;
           }
         }
       }

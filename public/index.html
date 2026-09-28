@@ -98,7 +98,7 @@
           </div>
         </div>
 
-        <!-- Column 2 (Smallest / Middle): 4 KPI Mini-Cards Stacked Vertically -->
+        <!-- Column 2 (Middle): 8 KPI Mini-Cards Grid (2x4) -->
         <div class="kpi-vertical-column">
           <div class="kpi-mini-card">
             <div class="kpi-mini-label">Balance</div>
@@ -109,19 +109,43 @@
           <div class="kpi-mini-card">
             <div class="kpi-mini-label">Covered</div>
             <div id="kpi-days-covered" class="kpi-mini-val">0</div>
-            <div class="kpi-mini-sub">Prepaid Meals</div>
+            <div class="kpi-mini-sub">Prepaid Days</div>
           </div>
 
           <div class="kpi-mini-card">
-            <div class="kpi-mini-label">Eaten</div>
-            <div id="kpi-eaten-cnt" class="kpi-mini-val" style="color: var(--accent-emerald);">0</div>
-            <div class="kpi-mini-sub">Meals</div>
+            <div class="kpi-mini-label">Veg Meals</div>
+            <div id="kpi-veg-cnt" class="kpi-mini-val" style="color: var(--accent-emerald);">0</div>
+            <div class="kpi-mini-sub">Green Tiles</div>
+          </div>
+
+          <div class="kpi-mini-card">
+            <div class="kpi-mini-label">Non-Veg Meals</div>
+            <div id="kpi-nonveg-cnt" class="kpi-mini-val" style="color: var(--accent-rose);">0</div>
+            <div class="kpi-mini-sub">Red Tiles</div>
+          </div>
+
+          <div class="kpi-mini-card">
+            <div class="kpi-mini-label">Total Cycles</div>
+            <div id="kpi-total-cycles" class="kpi-mini-val">0</div>
+            <div class="kpi-mini-sub">Logged Till Date</div>
+          </div>
+
+          <div class="kpi-mini-card">
+            <div class="kpi-mini-label">Money Loaded</div>
+            <div id="kpi-total-loaded" class="kpi-mini-val" style="color: var(--accent-matcha);">₹0.00</div>
+            <div class="kpi-mini-sub">All Payments</div>
           </div>
 
           <div class="kpi-mini-card">
             <div class="kpi-mini-label">Skipped</div>
             <div id="kpi-skipped-cnt" class="kpi-mini-val" style="color: var(--text-muted);">0</div>
-            <div class="kpi-mini-sub">Meals</div>
+            <div class="kpi-mini-sub">Un-eaten Days</div>
+          </div>
+
+          <div class="kpi-mini-card">
+            <div class="kpi-mini-label">Total Expense</div>
+            <div id="kpi-total-expense" class="kpi-mini-val">₹0.00</div>
+            <div class="kpi-mini-sub">Consumed Money</div>
           </div>
         </div>
 
@@ -240,19 +264,19 @@
     </div>
   </div>
 
-  <!-- Modal: Edit / Unselect Meal (Green & Yellow Tiles) -->
+  <!-- Modal: Edit / Unselect Meal (Green & Red Tiles) -->
   <div id="modal-special-meal" class="modal-overlay">
     <div class="modal-card">
-      <h3 id="special-meal-title" style="font-size: 1.15rem; font-weight: 800; color: var(--accent-amber);">Meal Options</h3>
+      <h3 id="special-meal-title" style="font-size: 1.15rem; font-weight: 800; color: var(--accent-rose);">Meal Options</h3>
       <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: -10px;" id="special-meal-date-label">Choose an action for this meal date.</p>
       
       <div class="form-group">
-        <label class="form-label">Special Meal Custom Amount (₹)</label>
+        <label class="form-label">Non-Veg Meal Custom Amount (₹)</label>
         <input type="number" id="input-special-meal-amount" class="form-input" placeholder="e.g. 300 for chicken" value="300">
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
-        <button class="btn-dashboard btn-white-bar" onclick="submitSpecialMeal()">Special Meal</button>
+        <button class="btn-dashboard btn-white-bar" onclick="submitSpecialMeal()">Non-Veg Meal</button>
         <button class="btn-dashboard btn-white-bar" onclick="removeMealFromModal()">Unselect Meal</button>
         <button class="btn-dashboard" style="margin-top: 4px;" onclick="closeModal('modal-special-meal')">Cancel</button>
       </div>
