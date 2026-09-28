@@ -316,10 +316,16 @@ function updateDashboardSymmetry() {
 
       daysCoveredEl.innerText = cycle.days_covered;
 
-      // Filter meals specifically for selected cycle range
       const cycleMeals = allMealsList.filter(m => m.date >= cycle.start_date && m.date <= cycle.end_date);
       const vegCount = cycleMeals.filter(m => m.status === 'eaten').length;
       const nonVegCount = cycleMeals.filter(m => m.status === 'special').length;
+      const totalLogged = vegCount + nonVegCount;
+
+      const progressPct = Math.min(100, Math.round((totalLogged / 30) * 100));
+      const progressBarEl = document.getElementById('cycle-progress-bar');
+      const progressPercentEl = document.getElementById('cycle-progress-percent');
+      if (progressBarEl) progressBarEl.style.width = `${progressPct}%`;
+      if (progressPercentEl) progressPercentEl.innerText = `${progressPct}% (${totalLogged}/30 Days)`;
 
       if (vegCntEl) vegCntEl.innerText = vegCount;
       if (nonVegCntEl) nonVegCntEl.innerText = nonVegCount;

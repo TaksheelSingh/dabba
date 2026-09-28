@@ -273,6 +273,22 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
   box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); border-color: var(--accent-rose) !important;
 }
 
+/* Calendar Legend Bar */
+.calendar-legend {
+  display: flex; justify-content: center; align-items: center; gap: 18px;
+  margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--border-subtle);
+}
+.legend-item {
+  display: flex; align-items: center; gap: 6px; font-size: 0.75rem;
+  color: var(--text-secondary); font-weight: 600;
+}
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+}
+.legend-dot.veg { background: var(--accent-emerald); box-shadow: 0 0 6px rgba(16, 185, 129, 0.5); }
+.legend-dot.nonveg { background: var(--accent-rose); box-shadow: 0 0 6px rgba(239, 68, 68, 0.5); }
+.legend-dot.unselected { background: var(--surface-elevated); border: 1px solid var(--border-subtle); }
+
 /* Col 2: 8 KPI Cards Grid (2 Columns x 4 Rows) */
 .kpi-vertical-column {
   display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; justify-content: stretch; align-content: space-between; height: 100%;
@@ -281,19 +297,56 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 .kpi-mini-card {
   background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px 14px;
   display: flex; flex-direction: column; justify-content: center; flex: 1; min-height: 72px;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
-.kpi-mini-label { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
-.kpi-mini-val { font-size: 1.3rem; font-weight: 800; font-variant-numeric: tabular-nums; margin: 2px 0 1px 0; }
+.kpi-mini-card:hover {
+  border-color: var(--border-focus); transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.kpi-mini-label {
+  font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;
+}
+.kpi-dot {
+  width: 6px; height: 6px; border-radius: 50%; display: inline-block;
+}
+.kpi-dot.green { background: var(--accent-matcha); }
+.kpi-dot.red { background: var(--accent-rose); }
+.kpi-dot.cyan { background: #38BDF8; }
+.kpi-dot.indigo { background: #818CF8; }
+.kpi-dot.orange { background: #FB923C; }
+.kpi-dot.gray { background: var(--text-muted); }
+
+.kpi-mini-val { font-size: 1.3rem; font-weight: 800; font-variant-numeric: tabular-nums; margin: 2px 0 1px 0; letter-spacing: -0.02em; }
 .kpi-mini-sub { font-size: 0.72rem; color: var(--text-secondary); }
 
 /* Col 3: Active Cycle Ledger Card */
 .ledger-breakdown-card {
   background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 22px;
   display: flex; flex-direction: column; justify-content: space-between; height: 100%;
+  transition: border-color 0.18s ease;
+}
+.ledger-breakdown-card:hover { border-color: var(--border-focus); }
+
+/* Cycle Completion Progress Track */
+.cycle-progress-container {
+  margin: 14px 0; display: flex; flex-direction: column; gap: 6px;
+}
+.progress-label-row {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.progress-track {
+  width: 100%; height: 7px; background: var(--surface-elevated); border-radius: 10px;
+  overflow: hidden; border: 1px solid var(--border-subtle);
+}
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--accent-emerald), var(--accent-matcha));
+  border-radius: 10px; transition: width 0.4s ease;
 }
 
 .ledger-item-row {
-  display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px dashed var(--border-subtle);
+  display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed var(--border-subtle);
 }
 .ledger-item-row:last-child { border-bottom: none; }
 
