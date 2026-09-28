@@ -346,11 +346,11 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 .legend-dot.nonveg { background: var(--accent-rose); box-shadow: 0 0 6px rgba(239, 68, 68, 0.5); }
 .legend-dot.unselected { background: var(--surface-elevated); border: 1px solid var(--border-subtle); }
 
-/* Col 2: 8 KPI Cards Grid (Equal Heights & Bottom Alignment) */
+/* Col 2: 6 KPI Cards Grid (Equal Heights & 3 Rows) */
 .kpi-vertical-column {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   gap: 12px;
   height: 100%;
 }
