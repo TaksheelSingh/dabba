@@ -236,7 +236,7 @@ function populateCycleDropdown() {
   const select = document.getElementById('cycle-select');
   if (!select) return;
   
-  select.innerHTML = '<option value="all">All Cycles (Lifetime)</option>';
+  select.innerHTML = '<option value="all">All Cycles</option>';
 
   const seenCycleNumbers = new Set();
   state.cycles.forEach((c) => {
