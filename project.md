@@ -2,13 +2,15 @@
 
 ## 1. Brand Identity & Design System
 - **Name:** Dabba.
-- **Aesthetic:** High-contrast, tactile minimalist (Geist / Inter typography, dark basalt `#0C1020` & light basalt `#F8FAFC`).
+- **Aesthetic:** High-contrast, architectural minimalist (Geist / Inter typography, Obsidian Velvet `#0B0E14` dark mode & Studio Porcelain `#F3F4F7` light mode).
 - **Colors:**
   - Emerald / Matcha (`#10B981` / `#34D399`) — Eaten Meal (Green Tile)
-  - Amber (`#F59E0B`) — Special Meal (Yellow Tile)
-  - Rose / Red (`#EF4444`) — Warning & Alerts
-  - Elevated Basalt (`#1B2238`) — Neutral Tile (Gray / Un-eaten)
-- **Footer:**
+  - Crimson Rose (`#F43F5E` / `#E11D48`) — Non-Veg Meal (Red Tile) & Reset Action
+  - Azure Cyan (`#38BDF8`) — Prepaid Covered Days
+  - Indigo Violet (`#818CF8`) — Cycle Count Metrics
+  - Amber (`#F59E0B`) — Expense & Top-Up Highlights
+  - Elevated Obsidian (`#1A202C`) — Neutral Tile (Gray / Un-eaten)
+- **Footer (Dashboard Exclusive):**
   ```
   © 2026 Dabba. All tiffins accounted for. Zero cold tiffins, zero math headaches.
   Made by Taksheel Rawat
@@ -22,25 +24,29 @@
 ### A. 3-State Meal Attendance System
 1. **Gray (`none` / Un-eaten):** Default state for non-logged calendar dates in a cycle.
 2. **Green (`eaten`):** Logged standard meal deducted at standard daily rate (`daily_rate` e.g. ₹90).
-3. **Yellow (`special`):** Logged meal with custom expense (e.g. ₹300 for special chicken plate). Deducts exact custom amount from cash balance while keeping eaten count (+1) and skipped count (-1) updated.
+3. **Red / Crimson (`special`):** Logged Non-Veg meal with custom expense (e.g. ₹300 for special chicken plate). Deducts exact custom amount from cash balance while keeping eaten count (+1) and skipped count (-1) updated.
 
-### B. Top-Up Payment Engine
+### B. Verified Top-Up Payment Engine
 - **Split Payments & Top-Ups:** `payments` table linked to `cycle_id`.
-- **Live Daily Rate Recalculation:** Adding top-up payments live-recalculates `daily_rate = Total Paid / 30`.
-- **Dynamic Ledger Sync:** Remaining balance (`Total Paid - Consumed Expense`) and covered days (`Math.floor(Remaining Balance / Daily Rate)`) update in real time.
+- **Live Daily Rate Recalculation:** Adding top-up payments (via `Top Up Payment` modal) live-recalculates `daily_rate = Total Paid / 30`.
+- **Dynamic Ledger Sync:** Remaining balance (`Total Paid - Consumed Expense`) and covered days (`Math.floor(Remaining Balance / Daily Rate)`) update in real time across Dashboard and Payments Workspace views.
 
-### C. Overview vs. Selected Cycle Calendar Locking
-- **All Cycles (Lifetime):** Calendar grid and month navigation lock with blurred backdrop (`opacity: 0.25`, `filter: blur(1.5px)`), disabling clicks and showing a red warning banner.
+### C. Workspace View Switching & Navigation
+- **Multi-View Architecture:** Instant switching between `Dashboard` view and `Payments Ledger` workspace view.
+- **Payments Workspace View:** Displays transaction history cards and a scrollable table with `S.No`, `Cycle Number`, `Payment Date`, `Initial Payment`, `Add-Ons / Top-Ups`, `Total Paid`, and notes.
+
+### D. Single-Cycle Deletion & Reset System
+- **Compact Profile & Reset "R" Button:** Sidebar footer features a crammed profile badge (`Taksheel Rawat`) and an optically centered red circular **R** reset action button.
+- **Cycle Deletion Modal:** Triggers `#modal-reset-options`, allowing users to delete a specific cycle (`DELETE /api/cycles/:id`) and purge all associated meals and payments, or perform a complete cloud database reset (`/api/reset-now`).
+
+### E. Overview vs. Selected Cycle Calendar Locking
+- **All Cycles:** Calendar grid and month navigation lock with blurred backdrop (`opacity: 0.25`, `filter: blur(1.5px)`), disabling clicks and showing a warning banner.
 - **Selected Cycle (`Cycle #N`):** Grid unfreezes for single-tap toggling within cycle start and end date boundaries.
 
-### D. Mobile Responsiveness & Equidistant Card Layout
-- **Vertical Single-Column Stacking:** On mobile screens ($\le 768\text{px}$), the 3-column desktop grid dynamically transforms into a single full-width column (`flex-direction: column !important; width: 100% !important;`).
-- **Equidistant Mobile Spacing:** All dashboard cards maintain a uniform 14px vertical gap across calendar, KPI metrics, and payment ledger sections.
-- **Mobile Navigation Header:** Top bar includes a dedicated `+ New Cycle` white button for quick mobile cycle creation.
-
-### E. Silent Notifications & Zero-Flicker UX
-- **Native Alert Removal:** Replaced legacy `alert(...)` popups with silent visual UI updates.
-- **Zero-Flicker Mobile Theme Switching:** Optimized CSS selectors by stripping universal wildcard `*` transitions, ensuring smooth, instantaneous light/dark theme toggles on mobile GPUs.
+### F. Mobile Responsiveness & Equidistant Card Layout
+- **Vertical Single-Column Stacking:** On mobile screens ($\le 768\text{px}$), the 3-column desktop grid dynamically transforms into a single full-width column.
+- **Equidistant Spacing:** All dashboard cards maintain uniform vertical gaps.
+- **Mobile Navigation Header:** Top bar includes a dedicated `+ New Cycle` button for quick mobile cycle creation.
 
 ---
 
@@ -80,6 +86,21 @@ CREATE TABLE meals (
 
 ---
 
-## 4. Security & Environment Compliance
+## 4. API Endpoints Reference
+
+```
+GET    /api/cycles        - Get enriched cycle list
+POST   /api/cycles        - Create new 30-day cycle
+DELETE /api/cycles/:id    - Delete specific cycle & associated records
+POST   /api/payments      - Add top-up payment & sync stats
+GET    /api/meals         - Get meal attendance records
+POST   /api/meals/toggle  - Toggle meal status (eaten, special, none)
+GET    /api/telemetry      - Get lifetime financial telemetry
+GET    /api/reset-now     - Hard wipe database
+```
+
+---
+
+## 5. Security & Environment Compliance
 - **No Secret Files Pushed:** Zero `.env` files, API keys, or private tokens committed to GitHub.
 - **Git Ignore:** Configured to exclude `node_modules/`, `.gemini/`, `.env`, and log files.

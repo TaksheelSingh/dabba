@@ -10,16 +10,17 @@ Hot Tiffins Delivered by **Kamlesh Negi**
 ## 🏗️ Architecture & Engineering Highlights
 
 - **Decoupled Business Logic:** Clean separation of concerns with Express routing in `server.js`, financial computations & cycle enrichment in `services/cycleService.js`, and database abstractions in `db.js`.
-- **DRY (Don't Repeat Yourself) Principles:** Zero code duplication. Unified parallel data fetching (`refreshAppState()`) and consolidated state management.
+- **Multi-View Workspace Architecture:** Instant switching between **Dashboard** and **Payments Ledger** workspace views without disruptive modal popups.
+- **Bespoke Architectural Color System:** High-end **Obsidian Velvet** (`#0B0E14`) Dark Mode and warm **Studio Porcelain** (`#F3F4F7`) Light Mode. Red Non-Veg meal badges styled in warm Crimson Rose (`#F43F5E` / `#E11D48`).
 - **3-State Attendance Toggling:**
   - **Gray (Un-eaten / Skipped):** Default state for non-logged calendar dates.
   - **Green (Eaten):** Standard meal logged at the cycle's daily rate (e.g. ₹90/day).
-  - **Yellow (Special Meal):** Custom meal logged with special expense (e.g. ₹300 for chicken plate). Deducts exact custom amount from cash balance while correctly updating eaten (+1) and skipped (-1) meal counters.
-- **Top-Up Payment Integration:** Add extra payments (+₹300) anytime to live-recalculate daily rates (`Total Paid / 30`) and update remaining balances and covered days instantly.
-- **Frozen Overview Calendar:** In *All Cycles (Lifetime)* mode, calendar grid and month navigation lock cleanly with a warning overlay guiding cycle selection.
-- **Mobile Responsive & Equidistant Card Layout:** Single-column vertical stacking on mobile screens ($\le 768\text{px}$) with 14px vertical spacing, custom modal overlays, and pixel-perfect 3-column desktop grid.
-- **Zero-Flicker Theme Toggle:** Hardware-accelerated dark/light theme switching optimized for mobile GPUs.
-- **Silent Notification System:** Replaced noisy native browser alerts with smooth, inline visual feedback.
+  - **Red / Crimson (Non-Veg Meal):** Custom meal logged with special expense (e.g. ₹300 for chicken plate). Deducts exact custom amount from cash balance while updating eaten (+1) and skipped (-1) meal counters.
+- **Verified Top-Up Payment Engine:** Add extra payments anytime to live-recalculate daily rates (`Total Paid / 30`) and update remaining balances, covered days, and transaction history in real time.
+- **Single-Cycle Deletion & Reset System:** Compact user profile badge with an optically centered circular red **R** action button. Triggers cycle deletion (`DELETE /api/cycles/:id`) or complete cloud database wipes.
+- **Equal-Height 8 KPI Grid Alignment:** 2x4 KPI mini-card grid spanning the exact vertical height of neighboring desktop cards, flush with bottom alignment and stadium rounded shapes (`border-radius: 9999px`).
+- **Frozen Overview Calendar:** In *All Cycles* overview mode, calendar grid and month navigation lock cleanly with a centered overlay guiding cycle selection.
+- **Mobile Responsive Layout:** Single-column vertical stacking on mobile screens ($\le 768\text{px}$) with custom modal overlays and touch-friendly controls.
 
 ---
 
@@ -29,10 +30,12 @@ Hot Tiffins Delivered by **Kamlesh Negi**
 | :--- | :--- | :--- |
 | `/api/cycles` | `GET` | Fetches all cycles enriched with total paid, consumed expense, remaining balance, and covered days. |
 | `/api/cycles` | `POST` | Creates a new 30-day cycle with auto-incremented cycle number and optional initial payment. |
+| `/api/cycles/:id` | `DELETE` | Deletes a specific cycle along with all its associated attendance meals and payment records. |
 | `/api/payments` | `POST` | Adds a top-up payment to a cycle, live-recalculating total paid and per-meal daily rate. |
 | `/api/meals` | `GET` | Retrieves meal attendance records. |
 | `/api/meals/toggle` | `POST` | Toggles meal status (`eaten`, `special`, or `none`) with custom rate snapshot support. |
 | `/api/telemetry` | `GET` | Returns lifetime telemetry metrics (total paid, total expense, effective cost per meal). |
+| `/api/reset-now` | `GET` / `POST` | Hard clears all database records across cycles, payments, and meals. |
 
 ---
 
