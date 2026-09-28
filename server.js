@@ -190,6 +190,11 @@ app.get('/api/telemetry', async (req, res) => {
         activeCyclesCount: allCycles.length
       }
     });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // -------------------------------------------------------------
 // HARD RESET API (Clears all meals, payments, cycles completely)
 // -------------------------------------------------------------
