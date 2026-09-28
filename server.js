@@ -193,6 +193,17 @@ app.get('/api/telemetry', async (req, res) => {
 // -------------------------------------------------------------
 // HARD RESET API (Clears all meals, payments, cycles completely)
 // -------------------------------------------------------------
+app.get('/api/reset-now', async (req, res) => {
+  try {
+    await dbRun(`DELETE FROM meals`);
+    await dbRun(`DELETE FROM payments`);
+    await dbRun(`DELETE FROM cycles`);
+    res.json({ success: true, message: 'All database records cleared completely' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 app.post('/api/admin/reset', async (req, res) => {
   try {
     await dbRun(`DELETE FROM meals`);
