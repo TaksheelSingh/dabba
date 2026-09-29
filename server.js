@@ -124,10 +124,17 @@ app.post('/api/meals/toggle', async (req, res) => {
       return res.json({ success: true, date, status: 'none' });
     }
 
-    const activeCycle = await dbGet(
-      `SELECT * FROM cycles WHERE start_date <= ? AND end_date >= ? ORDER BY id DESC LIMIT 1`,
-      [date, date]
+    let activeCycle = await dbGet(
+      `SELECT * FROM cycles WHERE start_date <= ? ORDER BY start_date DESC LIMIT 1`,
+      [date]
     );
+
+    if (activeCycle) {
+      const nextCycle = await dbGet(`SELECT start_date FROM cycles WHERE start_date > ? ORDER BY start_date ASC LIMIT 1`, [activeCycle.start_date]);
+      if (nextCycle && date >= nextCycle.start_date) {
+        activeCycle = null;
+      }
+    }
 
     const defaultRate = activeCycle ? activeCycle.daily_rate : 90.00;
     const cycleId = activeCycle ? activeCycle.id : null;

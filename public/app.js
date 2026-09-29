@@ -335,11 +335,14 @@ function updateDashboardSymmetry() {
 
     const cycle = state.cycles.find(c => String(c.id) === String(state.selectedCycleId));
     if (cycle) {
-      const cycleMeals = allMealsList.filter(m => m.date >= cycle.start_date && m.date <= cycle.end_date);
+      const nextCycleObj = state.cycles.filter(c => c.start_date > cycle.start_date).sort((a,b) => a.start_date.localeCompare(b.start_date))[0];
+      const maxDate = nextCycleObj ? nextCycleObj.start_date : '9999-12-31';
+
+      const cycleMeals = allMealsList.filter(m => (m.cycle_id && String(m.cycle_id) === String(cycle.id)) || (m.date >= cycle.start_date && m.date < maxDate));
       const vegCount = cycleMeals.filter(m => m.status === 'eaten').length;
       const nonVegCount = cycleMeals.filter(m => m.status === 'special').length;
       const totalLogged = vegCount + nonVegCount;
-      const remainingMeals = Math.max(0, 30 - totalLogged);
+      const prepaidDaysLeft = cycle.days_covered !== undefined ? cycle.days_covered : Math.max(0, Math.floor((cycle.remaining_balance || (cycle.total_paid - cycle.total_expense)) / (cycle.daily_rate || 90)));
 
       const progressPct = Math.min(100, Math.round((totalLogged / 30) * 100));
       if (progressBarEl) progressBarEl.style.width = `${progressPct}%`;
@@ -349,7 +352,7 @@ function updateDashboardSymmetry() {
       if (daysEatenEl) daysEatenEl.innerText = totalLogged;
       if (vegCntEl) vegCntEl.innerText = vegCount;
       if (nonVegCntEl) nonVegCntEl.innerText = nonVegCount;
-      if (remainingMealsEl) remainingMealsEl.innerText = remainingMeals;
+      if (remainingMealsEl) remainingMealsEl.innerText = prepaidDaysLeft;
       if (skippedCntEl) skippedCntEl.innerText = cycle.skipped_count;
 
       if (ledgerRate) ledgerRate.innerText = `₹${cycle.daily_rate}/day`;
@@ -387,8 +390,14 @@ function renderCalendar() {
   const todayStr = getTodayISOString();
 
   let activeCycle = null;
+  let activeCycleMaxDate = '9999-12-31';
+
   if (state.selectedCycleId !== 'all') {
     activeCycle = state.cycles.find(c => String(c.id) === String(state.selectedCycleId));
+    if (activeCycle) {
+      const nextCycleObj = state.cycles.filter(c => c.start_date > activeCycle.start_date).sort((a,b) => a.start_date.localeCompare(b.start_date))[0];
+      if (nextCycleObj) activeCycleMaxDate = nextCycleObj.start_date;
+    }
   }
 
   for (let i = 0; i < firstDayIndex; i++) {
@@ -409,7 +418,7 @@ function renderCalendar() {
     if (dateKey === todayStr) tile.classList.add('today');
 
     if (activeCycle) {
-      if (dateKey >= activeCycle.start_date && dateKey <= activeCycle.end_date) {
+      if (dateKey >= activeCycle.start_date && dateKey < activeCycleMaxDate) {
         tile.classList.add('in-cycle-range');
         const meal = state.meals[dateKey];
         if (meal) {
@@ -432,8 +441,8 @@ function renderCalendar() {
         return;
       }
       if (activeCycle) {
-        if (dateKey < activeCycle.start_date || dateKey > activeCycle.end_date) {
-          showToast(`Date is outside Cycle #${activeCycle.cycle_number} (${formatShortDateYear(activeCycle.start_date)} - ${formatShortDateYear(activeCycle.end_date)})`);
+        if (dateKey < activeCycle.start_date || dateKey >= activeCycleMaxDate) {
+          showToast(`Date is outside Cycle #${activeCycle.cycle_number} range`);
           return;
         }
       }

@@ -21,13 +21,15 @@
 
 ## 2. Advanced Real-World Logic Engine (v2.0)
 
-### A. 3-State Meal Attendance System
+### A. 3-State Meal Attendance & Real-World Carry-Forward Logic
 1. **Gray (`none` / Un-eaten):** Default state for non-logged calendar dates in a cycle.
 2. **Green (`eaten`):** Logged standard meal deducted at standard daily rate (`daily_rate` e.g. ₹90).
 3. **Red / Crimson (`special`):** Logged Non-Veg meal with custom expense (e.g. ₹300 for special chicken plate). Deducts exact custom amount from cash balance while keeping eaten count (+1) and skipped count (-1) updated.
+4. **Carry-Forward Dates Extension:** Unused prepaid meals carry forward past nominal cycle end dates (e.g., from Sept 30 into Oct 1–10). For the running cycle, any date $\ge \text{start\_date}$ remains valid for logging until a subsequent cycle starts.
 
-### B. Verified Top-Up Payment Engine
+### B. Verified Top-Up Payment & Prepaid Days Left Engine
 - **Split Payments & Top-Ups:** `payments` table linked to `cycle_id`.
+- **Prepaid Days Left (Remaining Meals KPI):** Computed strictly as $\lfloor \text{Remaining Balance} / \text{Daily Rate} \rfloor$. Without top-ups, it equals skipped meals unless custom Non-Veg meals (₹300) were consumed. Adding a top-up increases remaining balance and dynamically extends prepaid covered days.
 - **Automatic Active Cycle Selection:** Opening the `Top Up Payment` modal automatically selects and binds the current active cycle context.
 - **Live Daily Rate Recalculation:** Adding top-up payments live-recalculates `daily_rate = Total Paid / 30`.
 - **Dynamic Ledger Sync:** Remaining balance (`Total Paid - Consumed Expense`) and covered days update in real time across Dashboard and Payments Workspace views.

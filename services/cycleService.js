@@ -26,9 +26,12 @@ async function enrichCycle(cycle) {
     }
   }
 
+  const nextCycle = await dbGet(`SELECT start_date FROM cycles WHERE start_date > ? ORDER BY start_date ASC LIMIT 1`, [cycle.start_date]);
+  const maxDate = nextCycle ? nextCycle.start_date : '9999-12-31';
+
   const meals = await dbQuery(
-    `SELECT * FROM meals WHERE (cycle_id = ?) OR (date >= ? AND date <= ? AND cycle_id IS NULL)`,
-    [cycle.id, cycle.start_date, cycle.end_date]
+    `SELECT * FROM meals WHERE (cycle_id = ?) OR (date >= ? AND date < ? AND cycle_id IS NULL)`,
+    [cycle.id, cycle.start_date, maxDate]
   );
 
   // Both normal 'eaten' and custom 'special' count as eaten meals
