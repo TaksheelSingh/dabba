@@ -782,8 +782,7 @@ function renderPaymentsView() {
     totalInitialPaidSum += initialPaid;
     totalTopUpsPaidSum += topUpPaid;
 
-    const todayStr = new Date().toISOString().split('T')[0];
-    const isCycleActive = (totalSpent < totalPaid) && (cycle.end_date ? (todayStr <= cycle.end_date) : true);
+    const isCycleActive = totalSpent < totalPaid;
 
     const statusDotHtml = isCycleActive
       ? `<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: rgba(48, 209, 88, 0.12); border: 1px solid rgba(48, 209, 88, 0.3); border-radius: 9999px; margin: 0 auto;" title="Cycle Active (Total Paid > Spent Amount)">
