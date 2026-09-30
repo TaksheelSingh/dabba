@@ -2,7 +2,8 @@
 
 ## 1. Brand Identity & Design System
 - **Name:** Dabba.
-- **Aesthetic:** High-contrast, architectural minimalist (Geist / Inter typography, Deep Obsidian `#090B0E` dark mode & Pristine Studio Porcelain `#F4F5F8` light mode with 0% purplish tint).
+- **Aesthetic:** High-contrast, architectural minimalist (Geist / Inter typography, Deep Obsidian `#090B0E` dark mode & Pristine Studio Porcelain `#F4F5F8` light mode aligned with `dashboard-design-system-SKILL.md`).
+- **Sidebar Status Badge:** Fully rounded user profile badge with live pulsating green connection dot (`#30D158` `live-dot-blinking`).
 - **Colors:**
   - Emerald / Matcha (`#10B981` / `#34D399`) — Eaten Meal (Green Tile)
   - Crimson Rose (`#F43F5E` / `#E11D48`) — Non-Veg Meal (Red Tile) & Reset Action
