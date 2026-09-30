@@ -785,10 +785,10 @@ function renderPaymentsView() {
 
     const statusDotHtml = isCycleActive
       ? `<span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(48, 209, 88, 0.12); border: 1px solid rgba(48, 209, 88, 0.3); border-radius: 9999px; font-size: 0.72rem; font-weight: 700; color: #30D158;" title="Cycle Active & Ongoing">
-          <span class="live-dot-blinking" style="background-color: #30D158; box-shadow: 0 0 8px rgba(48, 209, 88, 0.8);"></span> Active
+          <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #30D158; display: inline-block;"></span> Active
          </span>`
       : `<span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(255, 69, 58, 0.12); border: 1px solid rgba(255, 69, 58, 0.3); border-radius: 9999px; font-size: 0.72rem; font-weight: 700; color: #FF453A;" title="Cycle Ended">
-          <span class="live-dot-blinking" style="background-color: #FF453A; box-shadow: 0 0 8px rgba(255, 69, 58, 0.8);"></span> Ended
+          <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #FF453A; display: inline-block;"></span> Ended
          </span>`;
 
     rowsHtml += `

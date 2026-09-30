@@ -302,7 +302,6 @@ aside.sidebar {
   height: 8px;
   border-radius: 50%;
   background-color: #30D158;
-  box-shadow: 0 0 8px rgba(48, 209, 88, 0.6);
   display: inline-block;
   flex-shrink: 0;
   margin-left: auto;
