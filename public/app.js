@@ -775,7 +775,6 @@ function renderPaymentsView() {
     const topUpPaid = payments.length > 1 ? payments.slice(1).reduce((sum, p) => sum + parseFloat(p.amount), 0) : parseFloat(cycle.topup_paid || 0);
     const totalPaid = parseFloat(cycle.total_paid || (initialPaid + topUpPaid));
     const startDateDisplay = formatDisplayDate(cycle.start_date || cycle.paid_on);
-    const endDateDisplay = formatDisplayDate(cycle.end_date);
     const totalSpent = parseFloat(cycle.total_expense || 0);
 
     totalPaymentLogsCount += Math.max(1, payments.length);
@@ -783,6 +782,7 @@ function renderPaymentsView() {
     totalTopUpsPaidSum += topUpPaid;
 
     const isCycleActive = totalSpent < totalPaid;
+    const endDateDisplay = isCycleActive ? '—' : formatDisplayDate(cycle.end_date);
 
     const statusDotHtml = isCycleActive
       ? `<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: rgba(48, 209, 88, 0.12); border: 1px solid rgba(48, 209, 88, 0.3); border-radius: 9999px; margin: 0 auto;" title="Cycle Active (Total Paid > Spent Amount)">
