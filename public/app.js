@@ -765,6 +765,16 @@ function switchView(viewName) {
   }
 }
 
+function selectCycleAndGoToDashboard(cycleId) {
+  state.selectedCycleId = String(cycleId);
+  localStorage.setItem('dabba_selected_cycle', state.selectedCycleId);
+  const select = document.getElementById('cycle-select');
+  if (select) select.value = state.selectedCycleId;
+  switchView('dashboard');
+  updateDashboardSymmetry();
+  renderCalendar();
+}
+
 // Render Payments Workspace View
 function renderPaymentsView() {
   const tableBody = document.getElementById('full-payments-table-body');
@@ -794,14 +804,22 @@ function renderPaymentsView() {
     totalInitialPaidSum += initialPaid;
     totalTopUpsPaidSum += topUpPaid;
 
+    const isActive = String(cycle.id) === String(state.selectedCycleId) || (state.selectedCycleId === 'all' && index === 0);
+    const statusDotHtml = `<span style="display: inline-flex; align-items: center; justify-content: center;" title="${isActive ? 'Status: Active' : 'Status: Settled'}">
+      <span class="live-dot-blinking" style="background-color: ${isActive ? '#30D158' : '#71717A'}; box-shadow: 0 0 8px ${isActive ? 'rgba(48, 209, 88, 0.6)' : 'transparent'};"></span>
+    </span>`;
+    const actionPillHtml = `<button class="action-pill-i" title="Inspect Cycle Ledger" onclick="selectCycleAndGoToDashboard('${cycle.id}')">i</button>`;
+
     rowsHtml += `
       <tr>
-        <td style="font-weight: 700;">#${sNo}</td>
-        <td><span style="display: inline-block; padding: 2px 8px; background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: 9999px; font-weight: 700; color: var(--accent-matcha);">${cycleNum}</span></td>
+        <td style="font-weight: 700; color: var(--text-muted);">#${sNo}</td>
+        <td><span style="display: inline-block; padding: 2px 8px; background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: 9999px; font-weight: 700; color: var(--text-primary);">${cycleNum}</span></td>
         <td>${paidDate}</td>
-        <td style="font-weight: 700; color: var(--accent-matcha);">₹${initialPaid.toFixed(2)}</td>
-        <td>${topUpPaid > 0 ? `<span style="color: var(--accent-emerald); font-weight: 700;">+₹${topUpPaid.toFixed(2)}</span>` : '₹0.00'}</td>
+        <td style="font-weight: 700;">₹${initialPaid.toFixed(2)}</td>
+        <td style="color: ${topUpPaid > 0 ? 'var(--accent-emerald)' : 'var(--text-muted)'}; font-weight: ${topUpPaid > 0 ? '700' : '400'};">${topUpPaid > 0 ? `+₹${topUpPaid.toFixed(2)}` : '₹0.00'}</td>
         <td style="font-weight: 800; color: var(--accent-matcha);">₹${totalPaid.toFixed(2)}</td>
+        <td style="text-align: center;">${statusDotHtml}</td>
+        <td style="text-align: right;">${actionPillHtml}</td>
       </tr>
     `;
   });
@@ -809,7 +827,7 @@ function renderPaymentsView() {
   if (state.cycles.length === 0) {
     rowsHtml = `
       <tr>
-        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px 0; font-weight: 600;">
+        <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px 0; font-weight: 600;">
           No payment records found. Start a new cycle to record initial payments.
         </td>
       </tr>

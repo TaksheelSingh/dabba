@@ -2,50 +2,50 @@
  * DABBA. — 4-Card KPI Strip & Cycle Selection Validation System
  * ------------------------------------------------------------- */
 
-:root {
-  /* Dark Theme — Deep Obsidian & Pure Mineral Slate Palette (0% Purple Tint) */
-  --bg-basalt: #090B0E;
-  --surface-sidebar: #050709;
-  --surface-card: #0F1217;
-  --surface-elevated: #161A22;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(255, 255, 255, 0.22);
+:root, [data-theme="dark"] {
+  /* Pitch Black Dark Theme — Pure Obsidian Black (#000000 / #0A0A0C) */
+  --bg-basalt: #000000;
+  --surface-sidebar: #000000;
+  --surface-card: #0A0A0C;
+  --surface-elevated: #161618;
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-focus: rgba(255, 255, 255, 0.25);
   
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A1A1AA;
+  --text-muted: #71717A;
   
-  --accent-emerald: #10B981;
-  --accent-matcha: #34D399;
-  --accent-emerald-bg: rgba(16, 185, 129, 0.12);
-  --accent-rose: #F43F5E;
-  --accent-amber: #F59E0B;
-  --accent-cyan: #38BDF8;
-  --accent-indigo: #6366F1;
+  --accent-emerald: #30D158;
+  --accent-matcha: #30D158;
+  --accent-emerald-bg: rgba(48, 209, 88, 0.12);
+  --accent-rose: #FF453A;
+  --accent-amber: #FF9F0A;
+  --accent-cyan: #0A84FF;
+  --accent-indigo: #5E5CE6;
 
   --card-shadow-base: 0 2px 10px rgba(0, 0, 0, 0.35);
-  --card-shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.5);
+  --card-shadow-hover: 0 12px 28px -4px rgba(0, 0, 0, 0.45);
   
   --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
   
   --font-sans: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'Geist Mono', 'SF Mono', monospace;
 }
 
-/* Light Theme — Pristine Architectural Porcelain Palette (0% Purple Tint) */
+/* Light Theme — Pristine Architectural Porcelain Palette */
 [data-theme="light"] {
-  --bg-basalt: #F4F5F8;
+  --bg-basalt: #F8FAFC;
   --surface-sidebar: #FFFFFF;
   --surface-card: #FFFFFF;
-  --surface-elevated: #E5E7EB;
-  --border-subtle: rgba(0, 0, 0, 0.08);
-  --border-focus: rgba(0, 0, 0, 0.22);
+  --surface-elevated: #F1F5F9;
+  --border-subtle: #E2E8F0;
+  --border-focus: #CBD5E1;
   
-  --text-primary: #111827;
-  --text-secondary: #4B5563;
-  --text-muted: #9CA3AF;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
   
   --accent-emerald: #059669;
   --accent-matcha: #10B981;
@@ -143,13 +143,13 @@ aside.sidebar {
   border-radius: 9999px !important; color: var(--text-secondary); font-size: 0.88rem; font-weight: 600;
   cursor: pointer; text-decoration: none; border: 1px solid transparent; font-family: var(--font-sans);
   user-select: none;
-  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
-.nav-item:hover {
+.nav-item:not(.active):hover {
   border-color: var(--border-focus); transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); background: var(--surface-card); color: var(--text-primary);
+  box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.25); background: var(--surface-elevated); color: var(--text-primary);
 }
-.nav-item.active { background: var(--surface-card); color: var(--accent-emerald); font-weight: 700; border-color: var(--border-subtle); }
+.nav-item.active { background: var(--surface-elevated); color: var(--accent-emerald); font-weight: 700; border-color: var(--border-focus); }
 
 .sidebar-footer {
   display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; margin-top: auto;
@@ -260,11 +260,11 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 .toast-msg.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
 /* -------------------------------------------------------------
- * 3-COLUMN UNIFIED DASHBOARD GRID (End-to-End Fill & Symmetry)
+ * 3-COLUMN UNIFIED DASHBOARD GRID (2.2fr 1fr 1fr Synced Grid)
  * ------------------------------------------------------------- */
 .dashboard-3col-grid {
   display: grid;
-  grid-template-columns: 2fr 1.6fr 1.4fr;
+  grid-template-columns: 2.2fr 1fr 1fr;
   gap: 16px;
   align-items: stretch;
   width: 100%;
@@ -422,12 +422,12 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 .kpi-mini-card {
   background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px 16px;
   display: flex; flex-direction: column; justify-content: center; height: 100%; box-shadow: var(--card-shadow-base);
-  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
-  min-width: 0; overflow: hidden; box-sizing: border-box;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  min-width: 0; overflow: hidden; box-sizing: border-box; cursor: pointer;
 }
 .kpi-mini-card:hover {
-  border-color: var(--border-focus); transform: translateY(-2px);
-  box-shadow: var(--card-shadow-hover);
+  border-color: var(--border-focus); transform: translateY(-4px);
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.35);
 }
 
 .kpi-mini-label {
@@ -523,6 +523,41 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 }
 .payments-table tbody tr:last-child td { border-bottom: none; }
 .payments-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+/* Circular Italic i Action Button Pill (Design System Specification) */
+.action-pill-i {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  background: var(--accent-emerald);
+  color: #000000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-weight: 800;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(48, 209, 88, 0.3);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+}
+.action-pill-i:hover {
+  transform: scale(1.12);
+  background: #34D399;
+}
+.action-pill-i.secondary {
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  box-shadow: none;
+}
+.action-pill-i.secondary:hover {
+  background: var(--surface-card);
+  border-color: var(--border-focus);
+}
 
 .btn-icon {
   width: 42px; height: 42px; background: var(--surface-card); border: 1px solid var(--border-subtle);
