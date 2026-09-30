@@ -37,7 +37,7 @@
       </div>
 
       <div class="sidebar-footer">
-        <div class="user-profile-badge">
+        <div class="user-profile-badge" title="Dabba Telemetry Active">
           <div class="avatar-circle">TR</div>
           <div class="user-info-text">
             <div style="font-size: 0.8rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Taksheel Rawat</div>
@@ -45,7 +45,6 @@
           </div>
           <span class="live-dot-blinking" title="System Live"></span>
         </div>
-        <button class="btn-reset-circle" onclick="openResetModal()" title="Reset / Delete Cycle Data">R</button>
       </div>
     </aside>
 
@@ -55,7 +54,6 @@
       <div style="display: flex; align-items: center; gap: 6px;">
         <button class="nav-item active" id="mobile-nav-dash" style="padding: 6px 12px; font-size: 0.78rem; height: 34px;" onclick="switchView('dashboard')">Dash</button>
         <button class="nav-item" id="mobile-nav-pay" style="padding: 6px 12px; font-size: 0.78rem; height: 34px;" onclick="switchView('payments')">Payments</button>
-        <button class="btn-reset-circle" style="width: 32px; height: 32px; min-width: 32px; font-size: 0.85rem;" onclick="openResetModal()" title="Reset Data">R</button>
         <button id="theme-toggle-mobile" class="theme-toggle-btn" style="width: 32px; height: 32px;" onclick="toggleTheme()">
           <span id="theme-icon-mobile"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
         </button>
@@ -395,38 +393,7 @@
           <tbody id="payments-table-body">
             <!-- Dynamically populated row wise -->
           </tbody>
-        </table>
       </div>
-
-  <!-- Modal: Reset & Single Cycle Deletion -->
-  <div id="modal-reset-options" class="modal-overlay">
-    <div class="modal-card" style="max-width: 440px;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--accent-rose);">Reset & Delete Options</h3>
-        <button class="btn-icon" onclick="closeModal('modal-reset-options')" style="width: 32px; height: 32px; font-size: 0.9rem;">✕</button>
-      </div>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: -10px;">Delete a specific cycle and all its records, or wipe the entire database.</p>
-
-      <div class="form-group" style="margin-top: 4px;">
-        <label class="form-label">Select Specific Cycle to Delete</label>
-        <select id="reset-cycle-select" class="custom-select" style="width: 100%;">
-          <option value="">-- Choose cycle --</option>
-        </select>
-      </div>
-
-      <button class="btn-dashboard btn-dashboard-primary" style="background: var(--accent-rose); border-color: var(--accent-rose); width: 100%; font-weight: 700;" onclick="deleteSelectedCycle()">
-        🗑️ Delete Selected Cycle
-      </button>
-
-      <div style="text-align: center; font-size: 0.72rem; color: var(--text-muted); margin: 4px 0; display: flex; align-items: center; gap: 8px;">
-        <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
-        <span>OR</span>
-        <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
-      </div>
-
-      <button class="btn-dashboard btn-white-bar" style="color: var(--accent-rose) !important; width: 100%; font-weight: 800;" onclick="hardResetDatabase()">
-        💥 Wipe Entire Database (Hard Reset)
-      </button>
     </div>
   </div>
 

@@ -718,25 +718,7 @@ async function submitNewCycle() {
   }
 }
 
-async function hardResetDatabase() {
-  if (!confirm("Are you sure you want to permanently clear all database records (cycles, payments, meals)?")) {
-    return;
-  }
-  triggerHaptic();
-  try {
-    const res = await fetch('/api/reset-now');
-    const data = await res.json();
-    if (data.success) {
-      state.selectedCycleId = 'all';
-      localStorage.removeItem('dabba_selected_cycle');
-      closeModal('modal-reset-options');
-      await refreshAppState();
-      showToast("Database completely cleared!");
-    }
-  } catch (err) {
-    console.error("Failed to reset database:", err);
-  }
-}
+// Reset database function removed per user specification
 
 // -------------------------------------------------------------
 // WORKSPACE VIEW SWITCHER (Dashboard vs Payments Page)
@@ -807,11 +789,20 @@ function renderPaymentsView() {
     totalInitialPaidSum += initialPaid;
     totalTopUpsPaidSum += topUpPaid;
 
-    const isActive = String(cycle.id) === String(state.selectedCycleId) || (state.selectedCycleId === 'all' && index === 0);
-    const statusDotHtml = `<span style="display: inline-flex; align-items: center; justify-content: center;" title="${isActive ? 'Status: Active' : 'Status: Settled'}">
-      <span class="live-dot-blinking" style="background-color: ${isActive ? '#30D158' : '#71717A'}; box-shadow: 0 0 8px ${isActive ? 'rgba(48, 209, 88, 0.6)' : 'transparent'};"></span>
-    </span>`;
-    const actionPillHtml = `<button class="action-pill-i" title="Inspect Cycle Ledger" onclick="selectCycleAndGoToDashboard('${cycle.id}')">i</button>`;
+    const todayStr = new Date().toISOString().split('T')[0];
+    const isCycleActive = cycle.end_date ? (todayStr <= cycle.end_date) : (index === 0);
+
+    const statusDotHtml = isCycleActive
+      ? `<span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(48, 209, 88, 0.12); border: 1px solid rgba(48, 209, 88, 0.3); border-radius: 9999px; font-size: 0.72rem; font-weight: 700; color: #30D158;" title="Cycle Active & Ongoing">
+          <span class="live-dot-blinking" style="background-color: #30D158; box-shadow: 0 0 8px rgba(48, 209, 88, 0.8);"></span> Active
+         </span>`
+      : `<span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(255, 69, 58, 0.12); border: 1px solid rgba(255, 69, 58, 0.3); border-radius: 9999px; font-size: 0.72rem; font-weight: 700; color: #FF453A;" title="Cycle Ended">
+          <span class="live-dot-blinking" style="background-color: #FF453A; box-shadow: 0 0 8px rgba(255, 69, 58, 0.8);"></span> Ended
+         </span>`;
+
+    const actionPillHtml = `<button class="action-pill-nav" title="Switch to Cycle Dashboard" onclick="selectCycleAndGoToDashboard('${cycle.id}')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>`;
 
     rowsHtml += `
       <tr>
