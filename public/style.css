@@ -455,8 +455,8 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 8px;
-  min-height: 320px;
+  gap: 6px;
+  min-height: auto;
   width: 100%;
   box-sizing: border-box;
 }
@@ -464,14 +464,15 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 
 .day-tile {
   width: 100%;
+  max-width: 40px;
   aspect-ratio: 1;
-  min-height: 36px;
+  min-height: 38px;
   margin: 0 auto;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
   user-select: none;
@@ -706,7 +707,7 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
 
 /* Clean Minimal Workspace Footer (Exact GMD Specification) */
 .dashboard-footer {
-  margin-top: auto; padding: 16px 0; border-top: 1px dashed var(--border-subtle);
+  margin-top: auto; padding-top: 16px; padding-bottom: 16px; border-top: 1px dashed var(--border-color);
   text-align: center; display: flex; flex-direction: column; align-items: center;
   gap: 4px; font-family: var(--font-sans);
 }
@@ -821,8 +822,8 @@ select.custom-select:focus { border-color: var(--accent-matcha); }
   .day-tile {
     font-size: 0.78rem;
     min-height: 0;
-    max-width: 40px;
-    max-height: 40px;
+    max-width: 36px;
+    max-height: 36px;
     -webkit-tap-highlight-color: transparent;
   }
   
