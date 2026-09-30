@@ -314,7 +314,7 @@ aside.sidebar {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 20px;
   width: 100%;
 }
 .page-view.hidden { display: none !important; }
