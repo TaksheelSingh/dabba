@@ -296,8 +296,8 @@ aside.sidebar {
   display: flex; flex-direction: column; min-width: 0; overflow: hidden;
 }
 
-/* Live Connection Dot */
-.live-dot-blinking {
+/* Solid Connection Indicator Dot */
+.badge-status-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
