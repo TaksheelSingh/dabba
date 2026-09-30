@@ -11,7 +11,7 @@
     })();
   </script>
   <link rel="manifest" href="/manifest.json?v=26">
-  <meta name="theme-color" content="#090B0E">
+  <meta name="theme-color" content="#000000">
   <link rel="stylesheet" href="/style.css?v=26">
 </head>
 <body>
@@ -23,7 +23,7 @@
         <div class="brand-row">
           <div class="brand-title">Dabba.</div>
           <button id="theme-toggle-desktop" class="theme-toggle-btn" title="Toggle Theme" onclick="toggleTheme()">
-            <span id="theme-icon-desktop">☀️</span>
+            <span id="theme-icon-desktop"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
           </button>
         </div>
 
@@ -41,7 +41,7 @@
           <div class="avatar-circle">TR</div>
           <div class="user-info-text">
             <div style="font-size: 0.8rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Taksheel Rawat</div>
-            <div style="font-size: 0.65rem; color: var(--text-muted); white-space: nowrap;">Local User</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted); white-space: nowrap;">Dabba User</div>
           </div>
           <span class="live-dot-blinking" title="System Live"></span>
         </div>
@@ -56,8 +56,8 @@
         <button class="nav-item active" id="mobile-nav-dash" style="padding: 6px 12px; font-size: 0.78rem; height: 34px;" onclick="switchView('dashboard')">Dash</button>
         <button class="nav-item" id="mobile-nav-pay" style="padding: 6px 12px; font-size: 0.78rem; height: 34px;" onclick="switchView('payments')">Payments</button>
         <button class="btn-reset-circle" style="width: 32px; height: 32px; min-width: 32px; font-size: 0.85rem;" onclick="openResetModal()" title="Reset Data">R</button>
-        <button id="theme-toggle-mobile" class="theme-toggle-btn" style="width: 32px; height: 32px; font-size: 0.9rem;" onclick="toggleTheme()">
-          <span id="theme-icon-mobile">☀️</span>
+        <button id="theme-toggle-mobile" class="theme-toggle-btn" style="width: 32px; height: 32px;" onclick="toggleTheme()">
+          <span id="theme-icon-mobile"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
         </button>
       </div>
     </header>
@@ -287,7 +287,7 @@
       <div class="form-group">
         <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
           <span>Cycle End Date (Auto 30 Days)</span>
-          <span id="end-date-spinner" class="input-spinner hidden">⚡ Calculating...</span>
+          <span id="end-date-spinner" class="input-spinner hidden">Calculating...</span>
         </label>
         <input type="date" id="input-cycle-end" class="form-input" readonly style="opacity: 0.85; cursor: not-allowed; background: var(--surface-elevated);">
       </div>
@@ -295,7 +295,7 @@
       <div class="form-group">
         <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
           <span>Initial Total Payment (₹)</span>
-          <span id="paid-spinner" class="input-spinner hidden">⚡ Calculating...</span>
+          <span id="paid-spinner" class="input-spinner hidden">Calculating...</span>
         </label>
         <input type="number" id="input-cycle-paid" class="form-input" value="0" placeholder="0" oninput="onCyclePaymentInput()">
       </div>
@@ -303,7 +303,7 @@
       <div class="form-group">
         <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
           <span>Daily Meal Rate (₹/meal)</span>
-          <span id="rate-spinner" class="input-spinner hidden">⚡ Calculating...</span>
+          <span id="rate-spinner" class="input-spinner hidden">Calculating...</span>
         </label>
         <input type="number" id="input-cycle-rate" class="form-input" value="0" placeholder="0" oninput="onCycleRateInput()">
       </div>
