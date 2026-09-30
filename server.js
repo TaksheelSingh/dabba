@@ -202,51 +202,6 @@ app.get('/api/telemetry', async (req, res) => {
   }
 });
 
-// -------------------------------------------------------------
-// SINGLE CYCLE DELETION API
-// -------------------------------------------------------------
-app.delete('/api/cycles/:id', async (req, res) => {
-  try {
-    const cycleId = req.params.id;
-    const cycle = await dbGet(`SELECT * FROM cycles WHERE id = ?`, [cycleId]);
-    if (!cycle) {
-      return res.status(404).json({ success: false, error: 'Cycle not found' });
-    }
-
-    await dbRun(`DELETE FROM meals WHERE cycle_id = ? OR (date >= ? AND date <= ?)`, [cycleId, cycle.start_date, cycle.end_date]);
-    await dbRun(`DELETE FROM payments WHERE cycle_id = ?`, [cycleId]);
-    await dbRun(`DELETE FROM cycles WHERE id = ?`, [cycleId]);
-
-    res.json({ success: true, message: `Cycle #${cycle.cycle_number} and all associated data deleted successfully` });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
-// -------------------------------------------------------------
-// HARD RESET API (Clears all meals, payments, cycles completely)
-// -------------------------------------------------------------
-app.get('/api/reset-now', async (req, res) => {
-  try {
-    await dbRun(`DELETE FROM meals`);
-    await dbRun(`DELETE FROM payments`);
-    await dbRun(`DELETE FROM cycles`);
-    res.json({ success: true, message: 'All database records cleared completely' });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
-app.post('/api/admin/reset', async (req, res) => {
-  try {
-    await dbRun(`DELETE FROM meals`);
-    await dbRun(`DELETE FROM payments`);
-    await dbRun(`DELETE FROM cycles`);
-    res.json({ success: true, message: 'All database records cleared completely' });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
 
 app.listen(PORT, '0.0.0.0', () => {
   const localIP = getLocalIPAddress();

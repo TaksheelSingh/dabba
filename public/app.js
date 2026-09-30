@@ -750,15 +750,6 @@ function switchView(viewName) {
   }
 }
 
-function selectCycleAndGoToDashboard(cycleId) {
-  state.selectedCycleId = String(cycleId);
-  localStorage.setItem('dabba_selected_cycle', state.selectedCycleId);
-  const select = document.getElementById('cycle-select');
-  if (select) select.value = state.selectedCycleId;
-  switchView('dashboard');
-  updateDashboardSymmetry();
-  renderCalendar();
-}
 
 // Render Payments Workspace View
 function renderPaymentsView() {
@@ -833,54 +824,3 @@ function renderPaymentsView() {
   if (payTotalLoaded) payTotalLoaded.innerText = `₹${grandTotalMoneyLoaded.toFixed(2)}`;
 }
 
-// Open Reset Options Modal & Populate Cycle Selection
-function openResetModal() {
-  triggerHaptic();
-  const select = document.getElementById('reset-cycle-select');
-  if (select) {
-    let options = `<option value="">-- Choose cycle to delete --</option>`;
-    state.cycles.forEach(c => {
-      options += `<option value="${c.id}">Cycle #${c.cycle_number} (${formatDisplayDate(c.start_date)} to ${formatDisplayDate(c.end_date)})</option>`;
-    });
-    select.innerHTML = options;
-  }
-  openModal('modal-reset-options');
-}
-
-// Delete Selected Cycle Handler
-async function deleteSelectedCycle() {
-  const select = document.getElementById('reset-cycle-select');
-  const cycleId = select ? select.value : '';
-
-  if (!cycleId) {
-    showToast("Please select a cycle to delete");
-    return;
-  }
-
-  const selectedCycleObj = state.cycles.find(c => String(c.id) === String(cycleId));
-  const cycleName = selectedCycleObj ? `Cycle #${selectedCycleObj.cycle_number}` : `Cycle`;
-
-  if (!confirm(`Are you sure you want to delete ${cycleName} and all its attendance & payment logs?`)) {
-    return;
-  }
-
-  triggerHaptic();
-  try {
-    const res = await fetch(`/api/cycles/${cycleId}`, { method: 'DELETE' });
-    const data = await res.json();
-    if (data.success) {
-      if (state.selectedCycleId === String(cycleId)) {
-        state.selectedCycleId = 'all';
-        localStorage.removeItem('dabba_selected_cycle');
-      }
-      closeModal('modal-reset-options');
-      await refreshAppState();
-      showToast(`${cycleName} deleted successfully!`);
-    } else {
-      showToast("Error deleting cycle: " + (data.error || 'Failed'));
-    }
-  } catch (err) {
-    console.error("Error deleting cycle:", err);
-    showToast("Failed to connect to server");
-  }
-}
