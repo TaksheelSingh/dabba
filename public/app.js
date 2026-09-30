@@ -800,10 +800,6 @@ function renderPaymentsView() {
           <span class="live-dot-blinking" style="background-color: #FF453A; box-shadow: 0 0 8px rgba(255, 69, 58, 0.8);"></span> Ended
          </span>`;
 
-    const actionPillHtml = `<button class="action-pill-nav" title="Switch to Cycle Dashboard" onclick="selectCycleAndGoToDashboard('${cycle.id}')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-    </button>`;
-
     rowsHtml += `
       <tr>
         <td style="font-weight: 700; color: var(--text-muted);">#${sNo}</td>
@@ -813,7 +809,6 @@ function renderPaymentsView() {
         <td style="color: ${topUpPaid > 0 ? 'var(--accent-emerald)' : 'var(--text-muted)'}; font-weight: ${topUpPaid > 0 ? '700' : '400'};">${topUpPaid > 0 ? `+₹${topUpPaid.toFixed(2)}` : '₹0.00'}</td>
         <td style="font-weight: 800; color: var(--accent-matcha);">₹${totalPaid.toFixed(2)}</td>
         <td style="text-align: center;">${statusDotHtml}</td>
-        <td style="text-align: right;">${actionPillHtml}</td>
       </tr>
     `;
   });
@@ -821,7 +816,7 @@ function renderPaymentsView() {
   if (state.cycles.length === 0) {
     rowsHtml = `
       <tr>
-        <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px 0; font-weight: 600;">
+        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px 0; font-weight: 600;">
           No payment records found. Start a new cycle to record initial payments.
         </td>
       </tr>
