@@ -4,9 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dabba. — Tiffin & Expense Tracker</title>
-  <link rel="manifest" href="/manifest.json?v=25">
-  <meta name="theme-color" content="#0C1020">
-  <link rel="stylesheet" href="/style.css?v=25">
+  <script>
+    (function() {
+      var t = localStorage.getItem('dabba_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="manifest" href="/manifest.json?v=26">
+  <meta name="theme-color" content="#090B0E">
+  <link rel="stylesheet" href="/style.css?v=26">
 </head>
 <body>
   <div id="app-root">
@@ -421,11 +427,11 @@
     </div>
   </div>
 
-  <script src="/app.js?v=25"></script>
+  <script src="/app.js?v=26"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(regs => { for (let r of regs) r.update(); });
-      navigator.serviceWorker.register('/sw.js?v=25').catch(err => console.log('SW error:', err));
+      navigator.serviceWorker.register('/sw.js?v=26').catch(err => console.log('SW error:', err));
     }
   </script>
 </body>

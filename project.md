@@ -2,14 +2,14 @@
 
 ## 1. Brand Identity & Design System
 - **Name:** Dabba.
-- **Aesthetic:** High-contrast, architectural minimalist (Geist / Inter typography, Obsidian Velvet `#0B0E14` dark mode & Studio Porcelain `#F3F4F7` light mode).
+- **Aesthetic:** High-contrast, architectural minimalist (Geist / Inter typography, Deep Obsidian `#090B0E` dark mode & Pristine Studio Porcelain `#F4F5F8` light mode with 0% purplish tint).
 - **Colors:**
   - Emerald / Matcha (`#10B981` / `#34D399`) — Eaten Meal (Green Tile)
   - Crimson Rose (`#F43F5E` / `#E11D48`) — Non-Veg Meal (Red Tile) & Reset Action
   - Azure Cyan (`#38BDF8`) — Prepaid Covered Days
-  - Indigo Violet (`#818CF8`) — Cycle Count Metrics
+  - Clean Indigo (`#6366F1`) — Cycle Count Metrics
   - Amber (`#F59E0B`) — Expense & Top-Up Highlights
-  - Elevated Obsidian (`#1A202C`) — Neutral Tile (Gray / Un-eaten)
+  - Neutral Elevated Charcoal (`#161A22`) — Un-eaten Tile (Gray / Neutral)
 - **Footer (Dashboard Exclusive):**
   ```
   © 2026 Dabba. All tiffins accounted for. Zero cold tiffins, zero math headaches.

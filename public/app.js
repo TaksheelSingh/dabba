@@ -62,7 +62,7 @@ function applyTheme(theme) {
 
   const metaTheme = document.querySelector('meta[name="theme-color"]');
   if (metaTheme) {
-    metaTheme.setAttribute('content', theme === 'dark' ? '#0B0E14' : '#F3F4F7');
+    metaTheme.setAttribute('content', theme === 'dark' ? '#090B0E' : '#F4F5F8');
   }
 
   const icon = theme === 'dark' ? '☀️' : '🌙';
