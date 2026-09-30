@@ -774,28 +774,31 @@ function renderPaymentsView() {
     const initialPaid = payments.length > 0 ? parseFloat(payments[0].amount) : parseFloat(cycle.initial_paid || cycle.total_paid || 0);
     const topUpPaid = payments.length > 1 ? payments.slice(1).reduce((sum, p) => sum + parseFloat(p.amount), 0) : parseFloat(cycle.topup_paid || 0);
     const totalPaid = parseFloat(cycle.total_paid || (initialPaid + topUpPaid));
-    const paidDate = formatDisplayDate(cycle.paid_on || cycle.start_date);
+    const startDateDisplay = formatDisplayDate(cycle.start_date || cycle.paid_on);
+    const endDateDisplay = formatDisplayDate(cycle.end_date);
+    const totalSpent = parseFloat(cycle.total_expense || 0);
 
     totalPaymentLogsCount += Math.max(1, payments.length);
     totalInitialPaidSum += initialPaid;
     totalTopUpsPaidSum += topUpPaid;
 
     const todayStr = new Date().toISOString().split('T')[0];
-    const isCycleActive = cycle.end_date ? (todayStr <= cycle.end_date) : (index === 0);
+    const isCycleActive = (totalSpent < totalPaid) && (cycle.end_date ? (todayStr <= cycle.end_date) : true);
 
     const statusDotHtml = isCycleActive
-      ? `<span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(48, 209, 88, 0.12); border: 1px solid rgba(48, 209, 88, 0.3); border-radius: 9999px; font-size: 0.72rem; font-weight: 700; color: #30D158;" title="Cycle Active & Ongoing">
-          <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #30D158; display: inline-block;"></span> Active
+      ? `<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: rgba(48, 209, 88, 0.12); border: 1px solid rgba(48, 209, 88, 0.3); border-radius: 9999px; margin: 0 auto;" title="Cycle Active (Total Paid > Spent Amount)">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #30D158; display: inline-block;"></span>
          </span>`
-      : `<span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(255, 69, 58, 0.12); border: 1px solid rgba(255, 69, 58, 0.3); border-radius: 9999px; font-size: 0.72rem; font-weight: 700; color: #FF453A;" title="Cycle Ended">
-          <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #FF453A; display: inline-block;"></span> Ended
+      : `<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: rgba(142, 142, 147, 0.12); border: 1px solid rgba(142, 142, 147, 0.3); border-radius: 9999px; margin: 0 auto;" title="Cycle Over (Spent Amount >= Total Paid)">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #8E8E93; display: inline-block;"></span>
          </span>`;
 
     rowsHtml += `
       <tr>
         <td style="font-weight: 700; color: var(--text-muted);">#${sNo}</td>
         <td><span style="display: inline-block; padding: 2px 8px; background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: 9999px; font-weight: 700; color: var(--text-primary);">${cycleNum}</span></td>
-        <td>${paidDate}</td>
+        <td>${startDateDisplay}</td>
+        <td>${endDateDisplay}</td>
         <td style="font-weight: 700;">₹${initialPaid.toFixed(2)}</td>
         <td style="color: ${topUpPaid > 0 ? 'var(--accent-emerald)' : 'var(--text-muted)'}; font-weight: ${topUpPaid > 0 ? '700' : '400'};">${topUpPaid > 0 ? `+₹${topUpPaid.toFixed(2)}` : '₹0.00'}</td>
         <td style="font-weight: 800; color: var(--accent-matcha);">₹${totalPaid.toFixed(2)}</td>
@@ -807,7 +810,7 @@ function renderPaymentsView() {
   if (state.cycles.length === 0) {
     rowsHtml = `
       <tr>
-        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px 0; font-weight: 600;">
+        <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px 0; font-weight: 600;">
           No payment records found. Start a new cycle to record initial payments.
         </td>
       </tr>
